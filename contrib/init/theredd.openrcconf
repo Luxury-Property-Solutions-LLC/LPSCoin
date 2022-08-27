@@ -1,0 +1,26 @@
+# /etc/conf.d/lpscoinsd: config file for /etc/init.d/lpscoinsd
+
+# Config file location
+#BITCOIND_CONFIGFILE="/etc/lpscoins/lpscoins.conf"
+
+# What directory to write pidfile to?  (created and owned by $BITCOIND_USER)
+#BITCOIND_PIDDIR="/var/run/lpscoinsd"
+
+# What filename to give the pidfile
+#BITCOIND_PIDFILE="${BITCOIND_PIDDIR}/lpscoinsd.pid"
+
+# Where to write lpscoinsd data (be mindful that the blockchain is large)
+#BITCOIND_DATADIR="/var/lib/lpscoinsd"
+
+# User and group to own lpscoinsd process
+#BITCOIND_USER="lpscoins"
+#BITCOIND_GROUP="lpscoins"
+
+# Path to lpscoinsd executable
+#BITCOIND_BIN="/usr/bin/lpscoinsd"
+
+# Nice value to run lpscoinsd under
+#BITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+BITCOIND_OPTS=""
