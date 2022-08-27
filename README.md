@@ -20,6 +20,7 @@ More information at [lpscoins.io](http://www.lpscoins.io)
 <tr><td>Max Coin Supply</td><td>91,000,000,000 LPS</td></tr>
 <tr><td>Premine/Initial Supply</td><td>10 billion</td></tr>
 <tr><td>lpscoins Created Per block</td><td>100 LPS*</td></tr>
+<tr><td>Block Reward Distribution</td><td>50% MN & 50% Staker</td></tr>
 <tr><td>RPC Port</td><td>53473</td></tr>
 <tr><td>Network Port</td><td>53472</td></tr>
 </table>
