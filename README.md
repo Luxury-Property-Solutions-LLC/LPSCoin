@@ -30,6 +30,6 @@ More information at [lpscoins.io](http://www.lpscoins.io)
 ### PoS/PoW Block Details
 <table>
 <tr><td>Proof Of Work Phase</td><td>1-25000</td></tr>
-<tr><td>Proof Of Work Phase</td><td>25001-Infinite Blocks.</td></tr>
+<tr><td>Proof Of Work Stake</td><td>25001-Infinite Blocks.</td></tr>
 </table>
 
