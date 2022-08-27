@@ -14,7 +14,7 @@ More information at [lpscoins.io](http://www.lpscoins.io)
 <table>
 <tr><td>Ticker Symbol</td><td>LPS</td></tr>
 <tr><td>Algorithm</td><td>Quark</td></tr>
-<tr><td>Type</td><td>POW</td></tr>
+<tr><td>Type</td><td>POW / POS</td></tr>
 <tr><td>Block Time</td><td>60 secs</td></tr>
 <tr><td>Difficulty Retargeting</td><td>Every Block</td></tr>
 <tr><td>Max Coin Supply</td><td>91,000,000,000 LPS</td></tr>
