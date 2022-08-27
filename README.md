@@ -12,6 +12,7 @@ More information at [lpscoins.io](http://www.lpscoins.io)
 
 ### Coin Specs
 <table>
+<tr><td>Coin Name</td><td>Luxury Property Solutions LLC</td></tr>
 <tr><td>Ticker Symbol</td><td>LPS</td></tr>
 <tr><td>Algorithm</td><td>Quark</td></tr>
 <tr><td>Type</td><td>POW / POS</td></tr>
