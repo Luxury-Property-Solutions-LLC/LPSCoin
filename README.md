@@ -8,7 +8,7 @@ lpscoins is a cutting edge cryptocurrency, with many features not available in m
 - Fast transactions featuring guaranteed zero confirmation transactions, we call it _FastSend_.
 
 
-More information at [lpscoins.io](http://www.lpscoins.org)
+More information at [lpscoins.org](http://www.lpscoins.org)
 
 ### Coin Specs
 <table>
