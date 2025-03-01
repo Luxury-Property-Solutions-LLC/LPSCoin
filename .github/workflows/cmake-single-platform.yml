@@ -1,6 +1,5 @@
-# This starter workflow is for a CMake project running on a single platform. There is a different starter workflow if you need cross-platform coverage.
-# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
-name: CMake on a single platform
+# GitHub Actions workflow for building and testing LPSCoin Core using Autoconf/Automake
+name: LPSCoin Core Build
 
 on:
   push:
@@ -8,27 +7,38 @@ on:
   pull_request:
     branches: [ "main" ]
 
-env:
-  BUILD_TYPE: Release
-
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Cache CMake build
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential libtool autotools-dev autoconf pkg-config libssl-dev libevent-dev libboost-all-dev libminiupnpc-dev libzmq3-dev libdb4.8-dev libdb4.8++-dev qt5-default
+
+    - name: Cache build artifacts
       uses: actions/cache@v3
       with:
-        path: build
-        key: ${{ runner.os }}-cmake-build-${{ hashFiles('**/CMakeLists.txt') }}
-    - name: Configure CMake
-      if: steps.cache-cmake-build.outputs.cache-hit != 'true'
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}}
+        path: |
+          configure
+          Makefile
+          src/Makefile
+        key: ${{ runner.os }}-autoconf-${{ hashFiles('configure.ac', 'Makefile.am', 'src/Makefile.am') }}
+
+    - name: Generate build files
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: ./autogen.sh
+
+    - name: Configure build
+      if: steps.cache.outputs.cache-hit != 'true'
+      run: ./configure --with-gui=qt5 --enable-zmq
 
     - name: Build
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      run: make -j$(nproc)
 
-    - name: Test
-      working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{env.BUILD_TYPE}}
+    - name: Run tests
+      run: make check
