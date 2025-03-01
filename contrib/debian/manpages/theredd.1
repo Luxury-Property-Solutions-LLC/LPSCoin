@@ -1,209 +1,184 @@
-.TH PIED "1" "February 2017" "lpscoinsd 2.1.4.1"
+.TH LPSCOINSD "1" "March 2025" "lpscoinsd 4.1.0" "User Commands"
 .SH NAME
-lpscoins \- peer-to-peer network based digital currency
+lpscoinsd \- peer-to-peer network based digital currency daemon
 .SH SYNOPSIS
-lpscoinsd [options] <command> [params]
-.TP
-lpscoinsd [options] help <command> \- Get help for a command
+.B lpscoinsd
+[\fIoptions\fR] [\fIcommand\fR] [\fIparams\fR]
+.br
+.B lpscoinsd
+[\fIoptions\fR] \fBhelp\fR [\fIcommand\fR]
 .SH DESCRIPTION
-This  manual page documents the lpscoinsd program. lpscoins is a peer-to-peer digital currency. Peer-to-peer (P2P) means that there is no central authority to issue new money or keep track of transactions. Instead, these tasks are managed collectively by the nodes of the network. Advantages:
+\fBLPSCoinSD\fR is the daemon for the LPSCoin cryptocurrency, a peer-to-peer digital currency network. It manages the blockchain, handles transactions, and provides an RPC interface for remote control. Unlike centralized systems, LPSCoin operates without a central authority, with nodes collectively maintaining the network.
 
-lpscoins can be sent easily through the Internet, without having to trust middlemen. Transactions are designed to be irreversible. Be safe from instability caused by fractional reserve banking and central banks. The limited inflation of the lpscoins system’s money supply is distributed evenly (by CPU power) throughout the network, not monopolized by banks.
+Key features:
+- Send LPSCoins over the internet without intermediaries.
+- Irreversible transactions for security.
+- Decentralized issuance and stability, avoiding fractional reserve banking.
+
+This manpage documents the command-line options and RPC commands for \fBlpscoinsd\fR.
 
 .SH OPTIONS
 .TP
-\fB\-conf=\fR<file>
-Specify configuration file (default: lpscoins.conf)
+\fB\-?\fR, \fB\-h\fR, \fB\-\-help\fR
+Display this help message and exit.
 .TP
-\fB\-gen\fR
-Generate coins
+\fB\-version\fR
+Display version information and exit.
 .TP
-\fB\-gen\fR=\fI0\fR
-Don't generate coins
+\fB\-conf=\fR\fIfile\fR
+Specify configuration file (default: \fBthered.conf\fR or \fBlpscoins.conf\fR in \fB~/.lpscoin/\fR).
 .TP
-\fB\-min\fR
-Start minimized
-.TP
-\fB\-datadir=\fR<dir>
-Specify data directory
-.TP
-\fB\-proxy=\fR<ip:port>
-Connect through SOCKS5 proxy
-.TP
-\fB\-addnode=\fR<ip>
-Add a node to connect to
-.TP
-\fB\-connect=\fR<ip>
-Connect only to the specified node
-.TP
-\fB\-paytxfee=\fR<amt>
-Fee per KB to add to transactions you send
-.TP
-\fB\-server\fR
-Accept command line and JSON\-RPC commands
+\fB\-datadir=\fR\fIdir\fR
+Specify data directory (default: \fB~/.lpscoin/\fR).
 .TP
 \fB\-daemon\fR
-Run in the background as a daemon and accept commands
+Run in the background as a daemon (default: 0).
 .TP
 \fB\-testnet\fR
-Use the test network
+Use the test network (default: 0).
 .TP
-\fB\-rpcuser=\fR<user>
-Username for JSON\-RPC connections
+\fB\-proxy=\fR\fIip:port\fR
+Connect through a SOCKS5 proxy (e.g., 127.0.0.1:9050 for Tor).
 .TP
-\fB\-rpcpassword=\fR<pw>
-Password for JSON\-RPC connections
+\fB\-addnode=\fR\fIip[:port]\fR
+Add a node to connect to and keep open (e.g., 69.164.218.197).
 .TP
-\fB\-rpcport=\fR<port>
-Listen for JSON\-RPC connections on <port>
+\fB\-connect=\fR\fIip[:port]\fR
+Connect only to the specified node(s), disabling listening.
 .TP
-\fB\-rpcallowip=\fR<ip>
-Allow JSON\-RPC connections from specified IP address
+\fB\-listen\fR
+Accept incoming connections (default: 1 unless \fB\-connect\fR is used).
 .TP
-\fB\-rpcconnect=\fR<ip>
-Send commands to node running on <ip>
-.PP
-SSL options: (see the Bitcoin Wiki for SSL setup instructions)
+\fB\-port=\fR\fIport\fR
+Listen for connections on \fIport\fR (default: 53472; testnet: 51474).
 .TP
-\fB\-rpcssl\fR=\fI1\fR
-Use OpenSSL (https) for JSON\-RPC connections
+\fB\-maxconnections=\fR\fIn\fR
+Maintain at most \fIn\fR connections to peers (default: 125).
 .TP
-\fB\-rpcsslcertificatchainfile=\fR<file.cert>
-Server certificate file (default: server.cert)
+\fB\-upnp\fR
+Use UPnP to map the listening port (default: 1 when listening).
 .TP
-\fB\-rpcsslprivatekeyfile=\fR<file.pem>
-Server private key (default: server.pem)
+\fB\-paytxfee=\fR\fIamt\fR
+Set transaction fee per kB for sent transactions (default: 0.0001).
 .TP
-\fB\-rpcsslciphers=\fR<ciphers>
-Acceptable ciphers (default: TLSv1+HIGH:\:!SSLv2:\:!aNULL:\:!eNULL:\:!AH:\:!3DES:\:@STRENGTH)
+\fB\-server\fR
+Accept JSON-RPC commands (default: 0).
 .TP
-\-?
-This help message
+\fB\-rpcuser=\fR\fIuser\fR
+Username for JSON-RPC authentication.
+.TP
+\fB\-rpcpassword=\fR\fIpw\fR
+Password for JSON-RPC authentication.
+.TP
+\fB\-rpcport=\fR\fIport\fR
+Listen for JSON-RPC connections on \fIport\fR (default: 53473; testnet: 51475).
+.TP
+\fB\-rpcallowip=\fR\fIip\fR
+Allow JSON-RPC from specified IP (e.g., 192.168.1.0/24; default: 127.0.0.1 only).
+.TP
+\fB\-rpcconnect=\fR\fIip\fR
+Send RPC commands to a remote host (default: 127.0.0.1).
+.TP
+\fB\-rpcssl\fR
+Use SSL/TLS for RPC connections (default: 0).
+.TP
+\fB\-rpcsslciphers=\fR\fIciphers\fR
+Set SSL/TLS ciphers (default: TLSv1.2+ECDHE-RSA-AES256-GCM-SHA384:!aNULL:!eNULL).
+.TP
+\fB\-rpcsslcertificatechainfile=\fR\fIfile\fR
+SSL certificate chain file (default: server.cert).
+.TP
+\fB\-rpcsslprivatekeyfile=\fR\fIfile\fR
+SSL private key file (default: server.pem).
+.TP
+\fB\-txindex\fR
+Maintain a full transaction index (default: 0).
+.TP
+\fB\-reindex\fR
+Rebuild blockchain index on startup.
+.TP
+\fB\-debug\fR[=\fIcategory\fR]
+Output extra debugging info (e.g., "rpc", "net"; default: none).
+
 .SH COMMANDS
+These RPC commands can be sent via \fBbitrpc.py\fR or when \fB-server\fR is enabled. Use \fBhelp\fR [\fIcommand\fR] for details.
 .TP
-\fBbackupwallet 'destination'\fR
-Safely copies *wallet.dat* to 'destination', which can be a directory or a path with filename.
+\fBbackupwallet\fR \fIdestination\fR
+Safely copies \fBwallet.dat\fR to \fIdestination\fR (directory or file path).
 .TP
-\fBgetaccount 'lpscoinsaddress'\fR
-Returns the account associated with the given address.
+\fBgetaccount\fR \fIaddress\fR
+Returns the account associated with \fIaddress\fR.
 .TP
-\fBsetaccount 'lpscoinsaddress' ['account']\fR
-Sets the ['account'] associated with the given address. ['account'] may be omitted to remove an address from ['account'].
+\fBsetaccount\fR \fIaddress\fR [\fIaccount\fR]
+Sets \fIaccount\fR for \fIaddress\fR; omit \fIaccount\fR to remove it.
 .TP
-\fBgetaccountaddress 'account'\fR
-Returns a new lpscoins address for 'account'.
+\fBgetaccountaddress\fR \fIaccount\fR
+Returns a new address for \fIaccount\fR.
 .TP
-\fBgetaddressesbyaccount 'account'\fR
-Returns the list of addresses associated with the given 'account'.
+\fBgetaddressesbyaccount\fR \fIaccount\fR
+Lists addresses for \fIaccount\fR.
 .TP
-\fBgetbalance 'account'\fR
-Returns the server's available balance, or the balance for 'account'.
+\fBgetbalance\fR [\fIaccount\fR] [\fIminconf=1\fR]
+Returns balance for \fIaccount\fR or total server balance if omitted.
 .TP
 \fBgetblockcount\fR
-Returns the number of blocks in the longest block chain.
+Returns the number of blocks in the longest chain.
 .TP
 \fBgetblocknumber\fR
-Returns the block number of the latest block in the longest block chain.
+Returns the block height of the latest block (alias for \fBgetblockcount\fR).
 .TP
 \fBgetconnectioncount\fR
-Returns the number of connections to other nodes.
+Returns the number of peer connections.
 .TP
 \fBgetdifficulty\fR
-Returns the proof-of-work difficulty as a multiple of the minimum difficulty.
-.TP
-\fBgetgenerate\fR
-Returns boolean true if server is trying to generate PIE, false otherwise.
-.TP
-\fBsetgenerate 'generate' ['genproclimit']\fR
-Generation is limited to ['genproclimit'] processors, \-1 is unlimited.
-.TP
-\fBgethashespersec\fR
-Returns a recent hashes per second performance measurement while generating.
+Returns the proof-of-work difficulty.
 .TP
 \fBgetinfo\fR
-Returns an object containing server information.
+Returns server information.
 .TP
-\fBgetnewaddress 'account'\fR
-Returns a new lpscoins address for receiving payments. If 'account' is specified (recommended), it is added to the address book so payments received with the address will be credited to 'account'.
+\fBgetnewaddress\fR [\fIaccount\fR]
+Generates a new address, optionally for \fIaccount\fR.
 .TP
-\fBgetreceivedbyaccount 'account' ['minconf=1']\fR
-Returns the total amount received by addresses associated with 'account' in transactions with at least ['minconf'] confirmations.
+\fBgetreceivedbyaccount\fR [\fIaccount\fR] [\fIminconf=1\fR]
+Returns total received amount for \fIaccount\fR with at least \fIminconf\fR confirmations.
 .TP
-\fBgetreceivedbyaddress 'lpscoinsaddress' ['minconf=1']\fR
-Returns the total amount received by 'lpscoinsaddress' in transactions with at least ['minconf'] confirmations.
+\fBgetreceivedbyaddress\fR \fIaddress\fR [\fIminconf=1\fR]
+Returns total received amount for \fIaddress\fR with at least \fIminconf\fR confirmations.
 .TP
-\fBgettransaction 'txid'\fR
-Returns information about a specific transaction, given hexadecimal transaction ID.
+\fBgettransaction\fR \fItxid\fR
+Returns details for transaction \fItxid\fR.
 .TP
-\fBgetwork 'data'\fR
-If 'data' is specified, tries to solve the block and returns true if it was successful. If 'data' is not specified, returns formatted hash 'data' to work on:
-
-    "midstate" : precomputed hash state after hashing the first half of the data.
-    "data"     : block data.
-    "hash1"    : formatted hash buffer for second hash.
-    "target"   : little endian hash target.
+\fBhelp\fR [\fIcommand\fR]
+Lists commands or details for \fIcommand\fR.
 .TP
-\fBhelp 'command'\fR
-List commands, or get help for a command.
+\fBlistaccounts\fR [\fIminconf=1\fR]
+Lists accounts and balances with at least \fIminconf\fR confirmations.
 .TP
-\fBlistaccounts ['minconf=1']\fR
-List accounts and their current balances.
-     *note: requires lpscoins 1.0.2.1 or later.
+\fBlistreceivedbyaccount\fR [\fIminconf=1\fR] [\fIincludeempty=false\fR]
+Lists accounts with received amounts (\fIminconf\fR confirmations; include empty if \fIincludeempty\fR).
 .TP
-\fBlistreceivedbyaccount ['minconf=1'] ['includeempty=false']\fR
-['minconf'] is the minimum number of confirmations before payments are included. ['includeempty'] whether to include addresses that haven't received any payments. Returns an array of objects containing:
-
-    "account"       : the account of the receiving address.
-    "amount"        : total amount received by the address.
-    "confirmations" : number of confirmations of the most recent transaction included.
+\fBlistreceivedbyaddress\fR [\fIminconf=1\fR] [\fIincludeempty=false\fR]
+Lists addresses with received amounts (\fIminconf\fR confirmations; include empty if \fIincludeempty\fR).
 .TP
-\fBlistreceivedbyaddress ['minconf=1'] ['includeempty=false']\fR
-['minconf'] is the minimum number of confirmations before payments are included. ['includeempty'] whether to include addresses that haven't received any payments. Returns an array of objects containing:
-
-    "address"       : receiving address.
-    "account"       : the account of the receiving address.
-    "amount"        : total amount received by the address.
-    "confirmations" : number of confirmations of the most recent transaction included.
+\fBlisttransactions\fR [\fIaccount\fR] [\fIcount=10\fR] [\fIfrom=0\fR]
+Lists up to \fIcount\fR transactions for \fIaccount\fR, skipping \fIfrom\fR entries.
 .TP
-\fBlisttransactions 'account' ['count=10']\fR
-Returns a list of the last ['count'] transactions for 'account' \- for all accounts if 'account' is not specified or is "*". Each entry in the list may contain:
-
-    "category"      : will be generate, send, receive, or move.
-    "amount"        : amount of transaction.
-    "fee"           : Fee (if any) paid (only for send transactions).
-    "confirmations" : number of confirmations (only for generate/send/receive).
-    "txid"          : transaction ID (only for generate/send/receive).
-    "otheraccount"  : account funds were moved to or from (only for move).
-    "message"       : message associated with transaction (only for send).
-    "to"            : message-to associated with transaction (only for send).
-
-    *note: requires lpscoins 1.0.2.1 or later.
+\fBmove\fR \fIfromaccount\fR \fItoaccount\fR \fIamount\fR [\fIminconf=1\fR] [\fIcomment\fR]
+Moves \fIamount\fR from \fIfromaccount\fR to \fItoaccount\fR.
 .TP
-\fBmove <'fromaccount'> <'toaccount'> <'amount'> ['minconf=1'] ['comment']\fR
-Moves funds between accounts.
+\fBsendfrom\fR \fIaccount\fR \fIaddress\fR \fIamount\fR [\fIminconf=1\fR] [\fIcomment\fR] [\fIcomment-to\fR]
+Sends \fIamount\fR from \fIaccount\fR to \fIaddress\fR.
 .TP
-\fBsendfrom* <'account'> <'lpscoinsaddress'> <'amount'> ['minconf=1'] ['comment'] ['comment-to']\fR
-Sends amount from account's balance to 'lpscoinsaddress'. This method will fail if there is less than amount PIE with ['minconf'] confirmations in the account's balance (unless account is the empty-string-named default account; it behaves like the *sendtoaddress* method). Returns transaction ID on success.
-.TP
-\fBsendtoaddress 'lpscoinsaddress' 'amount' ['comment'] ['comment-to']\fR
-Sends amount from the server's available balance to 'lpscoinsaddress'. amount is a real and is rounded to the nearest 0.01. Returns transaction id on success.
+\fBsendtoaddress\fR \fIaddress\fR \fIamount\fR [\fIcomment\fR] [\fIcomment-to\fR]
+Sends \fIamount\fR to \fIaddress\fR from the server's balance.
 .TP
 \fBstop\fR
-Stops the lpscoins server.
-.TP
-\fBvalidateaddress 'lpscoinsaddress'\fR
-Checks that 'lpscoinsaddress' looks like a proper lpscoins address. Returns an object containing:
+Stops the daemon.
 
-    "isvalid" : true or false.
-    "ismine"  : true if the address is in the server's wallet.
-    "address" : lpscoinsaddress.
+.SH SEE ALSO
+.BR lpscoins-qt (1),
+.BR thered.conf (5),
+https://lpscoin.org/
 
-    *note: ismine and address are only returned if the address is valid.
-
-.SH "SEE ALSO"
-lpscoins.conf(5)
 .SH AUTHOR
-This manual page was written by Micah Anderson <micah@debian.org> for the Debian system (but may be used by others). Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 3 or any later version published by the Free Software Foundation.
-
-On Debian systems, the complete text of the GNU General Public License can be found in /usr/share/common-licenses/GPL.
-
+This manual page was updated for LPSCoin 4.1.0 by contributors to the LPSCoin project. Originally written by Micah Anderson <micah@debian.org> for Debian, it is licensed under the GNU General Public License, version 3 or later. See \fB/usr/share/common-licenses/GPL\fR on Debian systems.
