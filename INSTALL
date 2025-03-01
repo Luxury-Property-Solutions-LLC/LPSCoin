@@ -1,13 +1,98 @@
-Building lpscoins
+Installing LPSCoin Core
 
-Use the autogen script to prepare the build environment.
+LPSCoin Core is a cryptocurrency platform designed for luxury property transactions, offering enhanced privacy through Coin Mixing and rapid, zero-confirmation payments with FastSend. This guide provides step-by-step instructions to build and install LPSCoin Core from source on Linux, macOS, and Windows. Whether you're a developer, node operator, or enthusiast, these steps will get you started.
 
+Prerequisites
+
+Before building, install the required dependencies for your platform. These are based on LPSCoin Core's build system requirements.
+
+Linux (Ubuntu 22.04 Recommended)
+Install the following packages:
+    sudo apt-get update
+    sudo apt-get install -y build-essential libtool autotools-dev autoconf pkg-config libssl-dev libevent-dev bsdmainutils libboost-all-dev libminiupnpc-dev libzmq3-dev libdb4.8-dev libdb4.8++-dev qt5-default
+Notes:
+- libdb4.8-dev ensures wallet compatibility; if unavailable, use libdb5.3-dev with potential adjustments (see doc/build-unix.md).
+- qt5-default is optional for GUI support; skip if building without GUI.
+
+macOS (macOS 10.15+ Recommended)
+Install Homebrew (https://brew.sh/), then run:
+    brew update
+    brew install boost libevent openssl berkeley-db4 miniupnpc zeromq qt5
+Notes:
+- If Qt5 linking fails: brew link --force qt5.
+- Set paths if needed: export PKG_CONFIG_PATH=/usr/local/opt/qt5/lib/pkgconfig:/usr/local/opt/openssl/lib/pkgconfig
+
+Windows (MinGW/MSYS2)
+1. Install MSYS2 from https://www.msys2.org/.
+2. Open the MSYS2 MinGW 64-bit shell and install:
+    pacman -S mingw-w64-x86_64-gcc mingw-w64-x86_64-boost mingw-w64-x86_64-openssl mingw-w64-x86_64-libevent mingw-w64-x86_64-zeromq mingw-w64-x86_64-qt5 mingw-w64-x86_64-db git make
+Notes: Requires MinGW environment; see doc/build-windows.md for full setup and optional installer creation.
+
+Building LPSCoin Core
+
+Follow these steps to compile LPSCoin Core from source:
+
+1. Clone the Repository:
+    git clone https://github.com/Luxury-Property-Solutions-LLC/LPSCoin.git
+    cd LPSCoin
+
+2. Generate Build Files:
     ./autogen.sh
-    ./configure
-    make
+    This prepares the Autoconf environment.
 
-Always verify the signatures and checksums.
+3. Configure the Build:
+    ./configure --with-gui=qt5 --enable-zmq
+    Common Options:
+    - --enable-tests: Build the test suite.
+    - --without-gui: Skip Qt GUI for headless nodes.
+    - --enable-mixing: Enable Coin Mixing (default: yes).
+    - --enable-fastsync: Enable FastSend (default: yes).
+    - --with-boost=/path/to/boost: Specify Boost path if not auto-detected.
+    Run ./configure --help for all options.
 
-See doc/build-*.md for instructions on building lpscoinsd,
-the intended-for-services, no-graphical-interface, reference
-implementation of lpscoins.
+4. Compile:
+    make -j$(nproc)
+    -j$(nproc) uses all CPU cores for faster builds (Linux/macOS).
+    On Windows, use: make in the MSYS2 MinGW shell.
+
+Installing
+
+System-wide Installation (Optional):
+    sudo make install
+    Installs binaries to /usr/local/bin (Linux/macOS) or MSYS2 prefix (Windows).
+Local Use: Skip installation to run directly from the build directory:
+    Daemon: ./src/lpscoinsd
+    GUI: ./src/qt/lpscoins-qt
+
+Verification
+
+For pre-built binaries (when available), verify signatures and checksums from GitHub releases (see release notes for details). When building from source, ensure you clone from the official repository to avoid tampered code.
+
+Platform-Specific Notes
+
+Linux
+- Use libdb4.8-dev for wallet compatibility; newer versions may require --enable-glibc-back-compat.
+- Check config.log if configuration fails.
+
+macOS
+- Ensure Homebrew dependencies are in your PATH.
+- Troubleshooting: export LDFLAGS="-L/usr/local/opt/openssl/lib" CPPFLAGS="-I/usr/local/opt/openssl/include"
+
+Windows
+- Build in MSYS2 MinGW 64-bit shell (not MSYS2 MSYS).
+- Optional: Create an installer with make deploy (see doc/build-windows.md).
+
+Running LPSCoin Core
+
+After building:
+- Daemon: ./src/lpscoinsd --help for options.
+- GUI: ./src/qt/lpscoins-qt to launch the wallet interface.
+- Configuration: Edit ~/.lpscoins/lpscoins.conf (see doc/lpscoins.conf).
+
+Troubleshooting
+
+- Dependency Errors: Ensure all listed packages are installed; specify paths (e.g., --with-boost) if not found.
+- Build Fails: Check config.log for errors and report issues at https://github.com/Luxury-Property-Solutions-LLC/LPSCoin/issues
+- Detailed Guides: Consult doc/build-unix.md, doc/build-osx.md, or doc/build-windows.md.
+
+Thank you for joining the LPSCoin community! Build, run, and explore the future of luxury asset transactions.
