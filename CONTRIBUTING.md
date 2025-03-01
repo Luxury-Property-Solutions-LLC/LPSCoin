@@ -1,265 +1,120 @@
-Contributing to lpscoins Core
-============================
+# Contributing to LPSCoin Core
 
-The lpscoins Core project operates an open contributor model where anyone is
-welcome to contribute towards development in the form of peer review, testing
-and patches. This document explains the practical process and guidelines for
-contributing.
+LPSCoin Core is a blockchain platform revolutionizing luxury property transactions with privacy-enhancing Coin Mixing and rapid FastSend payments. We welcome contributions from anyone—whether through peer review, testing, or code patches—to build a secure, efficient cryptocurrency. This guide outlines the practical process and expectations for contributing.
 
-Firstly in terms of structure, there is no particular concept of "Core
-developers" in the sense of privileged people. Open source often naturally
-revolves around meritocracy where longer term contributors gain more trust from
-the developer community. However, some hierarchy is necessary for practical
-purposes. As such there are repository "maintainers" who are responsible for
-merging pull requests as well as a "lead maintainer" who is responsible for the
-release cycle, overall merging, moderation and appointment of maintainers.
+We operate an open contributor model where all are encouraged to participate. There’s no privileged "core developer" class; trust is earned through consistent, quality contributions over time. For practicality, we have "maintainers" who merge pull requests and a "lead maintainer" overseeing releases, merging, moderation, and maintainer appointments. Join us via GitHub Issues or email (support@lpscoin.org) for discussions—community channels like Discord are coming soon!
 
+## Contributor Workflow
+We use a "contributor workflow" where all changes, without exception, are proposed via pull requests (PRs). This ensures easy collaboration, testing, and review.
 
-Contributor Workflow
---------------------
+To contribute a patch:
+1. **Fork the Repository**: Fork [LPSCoin](https://github.com/Luxury-Property-Solutions-LLC/LPSCoin) and clone it:
+   ```bash
+   git clone https://github.com/<your-username>/LPSCoin.git
+   cd LPSCoin
+   ```
+2. **Create a Topic Branch**: Name it descriptively:
+   ```bash
+   git checkout -b feature/add-mixing-speed
+   ```
+3. **Commit Patches**:
+   - Adhere to [developer notes](doc/developer-notes.md) coding conventions.
+   - Keep commits atomic (one change per commit) and diffs readable—don’t mix formatting fixes with logic changes.
+   - Write verbose commit messages: a short subject (max 50 chars), a blank line, and detailed reasoning. Example:
+     ```
+     Improve Coin Mixing efficiency
+     
+     Optimized mixing algorithm to reduce latency by 20%. Tested with 1000 transactions.
+     Refs #123.
+     Signed-off-by: Your Name <your.email@example.com>
+     ```
+   - Reference issues (e.g., `refs #1234`, `fixes #4321`) to link discussions.
+   - Sign off with DCO: `Signed-off-by: Your Name <your.email@example.com>`.
+4. **Build and Test**:
+   ```bash
+   ./autogen.sh && ./configure --enable-tests && make && make check
+   ```
+5. **Push to Your Fork**:
+   ```bash
+   git push origin feature/add-mixing-speed
+   ```
+6. **Create a Pull Request**: Submit to the `main` branch on GitHub.
+   - **Prefix the PR title** with the affected area:
+     - `Consensus`: Consensus-critical code (e.g., `Consensus: Add OP_LUXURYCHECK`).
+     - `Docs`: Documentation (e.g., `Docs: Update README with FastSend`).
+     - `Qt`: GUI changes (e.g., `Qt: Add mixing status widget`).
+     - `Mixing`: Coin Mixing logic (e.g., `Mixing: Optimize anonymity set`).
+     - `FastSend`: FastSend features (e.g., `FastSend: Reduce confirmation delay`).
+     - `Net` or `P2P`: Network code (e.g., `Net: Enhance masternode sync`).
+     - `RPC/REST`: APIs (e.g., `RPC: Add getmixingstatus`).
+     - `Tests`: Unit/QA tests (e.g., `Tests: Add mixing edge cases`).
+     - `Trivial`: Non-code changes (e.g., `Trivial: Fix typo in wallet.cpp`).
+   - Use `[WIP]` if not ready (e.g., `[WIP] Mixing: Initial refactor`).
+   - Provide a detailed description with justification and references.
 
-The codebase is maintained using the "contributor workflow" where everyone
-without exception contributes patch proposals using "pull requests". This
-facilitates social contribution, easy testing and peer review.
+Expect feedback from peers. Add commits to address comments and push updates until all concerns are resolved.
 
-To contribute a patch, the workflow is as follows:
+## Squashing Commits
+If a maintainer requests squashing, combine commits into a clean history:
+```bash
+git checkout feature/add-mixing-speed
+git rebase -i HEAD~n  # n = number of commits
+# Mark commits as 'squash' except the first, edit message, save
+git push --force
+```
+Alternatively, enable “Allow edits from maintainers” in the PR’s GitHub sidebar and ask for help with squashing.
 
-  - Fork repository
-  - Create topic branch
-  - Commit patches
+Avoid multiple PRs for the same change—update the existing PR instead.
 
-The project coding conventions in the [developer notes](doc/developer-notes.md)
-must be adhered to.
-
-In general [commits should be atomic](https://en.wikipedia.org/wiki/Atomic_commit#Atomic_commit_convention)
-and diffs should be easy to read. For this reason do not mix any formatting
-fixes or code moves with actual code changes.
-
-Commit messages should be verbose by default consisting of a short subject line
-(50 chars max), a blank line and detailed explanatory text as separate
-paragraph(s), unless the title alone is self-explanatory (like "Corrected typo
-in init.cpp") in which case a single title line is sufficient. Commit messages should be
-helpful to people reading your code in the future, so explain the reasoning for
-your decisions. Further explanation [here](http://chris.beams.io/posts/git-commit/).
-
-If a particular commit references another issue, please add the reference, for
-example `refs #1234`, or `fixes #4321`. Using the `fixes` or `closes` keywords
-will cause the corresponding issue to be closed when the pull request is merged.
-
-Please refer to the [Git manual](https://git-scm.com/doc) for more information
-about Git.
-
-  - Push changes to your fork
-  - Create pull request
-
-The title of the pull request should be prefixed by the component or area that
-the pull request affects. Valid areas as:
-
-  - *Consensus* for changes to consensus critical code
-  - *Docs* for changes to the documentation
-  - *Qt* for changes to lpscoins-qt
-  - *Minting* for changes to the minting code
-  - *Net* or *P2P* for changes to the peer-to-peer network code
-  - *RPC/REST* for changes to the RPC or REST APIs
-  - *Scripts and tools* for changes to the scripts and tools
-  - *Tests* for changes to the lpscoins unit tests or QA tests
-  - *Trivial* should **only** be used for PRs that do not change generated
-    executable code. Notably, refactors (change of function arguments and code
-    reorganization) and changes in behavior should **not** be marked as trivial.
-    Examples of trivial PRs are changes to:
-    - comments
-    - whitespace
-    - variable names
-    - logging and messages
-  - *Utils and libraries* for changes to the utils and libraries
-  - *Wallet* for changes to the wallet code
-
-Examples:
-
-    Consensus: Add new opcode for BIP-XXXX OP_CHECKAWESOMESIG
-    Net: Automatically create hidden service, listen on Tor
-    Qt: Add feed bump button
-    Trivial: Fix typo in init.cpp
-
-If a pull request is specifically not to be considered for merging (yet) please
-prefix the title with [WIP] or use [Tasks Lists](https://help.github.com/articles/basic-writing-and-formatting-syntax/#task-lists)
-in the body of the pull request to indicate tasks are pending.
-
-The body of the pull request should contain enough description about what the
-patch does together with any justification/reasoning. You should include
-references to any discussions (for example other tickets or mailing list
-discussions).
-
-At this stage one should expect comments and review from other contributors. You
-can add more commits to your pull request by committing them locally and pushing
-to your fork until you have satisfied all feedback.
-
-Squashing Commits
----------------------------
-If your pull request is accepted for merging, you may be asked by a maintainer
-to squash and or [rebase](https://git-scm.com/docs/git-rebase) your commits
-before it will be merged. The basic squashing workflow is shown below.
-
-    git checkout your_branch_name
-    git rebase -i HEAD~n
-    # n is normally the number of commits in the pull
-    # set commits from 'pick' to 'squash', save and quit
-    # on the next screen, edit/refine commit messages
-    # save and quit
-    git push -f # (force push to GitHub)
-
-If you have problems with squashing (or other workflows with `git`), you can
-alternatively enable "Allow edits from maintainers" in the right GitHub
-sidebar and ask for help in the pull request.
-
-Please refrain from creating several pull requests for the same change.
-Use the pull request that is already open (or was created earlier) to amend
-changes. This preserves the discussion and review that happened earlier for
-the respective change set.
-
-The length of time required for peer review is unpredictable and will vary from
-pull request to pull request.
-
-
-Pull Request Philosophy
------------------------
-
-Patch sets should always be focused. For example, a pull request could add a
-feature, fix a bug, or refactor code; but not a mixture. Please also avoid super
-pull requests which attempt to do too much, are overly large, or overly complex
-as this makes review difficult.
-
+## Pull Request Philosophy
+PRs should be focused: one feature, bug fix, or refactor—not a mix. Avoid large, complex “super PRs” that hinder review.
 
 ### Features
-
-When adding a new feature, thought must be given to the long term technical debt
-and maintenance that feature may require after inclusion. Before proposing a new
-feature that will require maintenance, please consider if you are willing to
-maintain it (including bug fixing). If features get orphaned with no maintainer
-in the future, they may be removed by the Repository Maintainer.
-
+New features (e.g., enhancing Coin Mixing or FastSend) require consideration of long-term maintenance. Propose only if you’re willing to maintain them, including bug fixes. Unmaintained features may be removed later.
 
 ### Refactoring
+Refactoring PRs fall into:
+- **Code Moves**: Relocating code without behavior changes.
+- **Style Fixes**: Formatting updates (e.g., whitespace).
+- **Code Refactoring**: Structural improvements.
+Keep these separate, avoid mixing with functional changes, and ensure no behavior shifts. Examples:
+- `Refactor: Move mixing logic to mixing.cpp`
+- `Style: Standardize 4-space indentation in net.cpp`
 
-Refactoring is a necessary part of any software project's evolution. The
-following guidelines cover refactoring pull requests for the project.
+Maintainers prioritize quick reviews for simple refactors.
 
-There are three categories of refactoring, code only moves, code style fixes,
-code refactoring. In general refactoring pull requests should not mix these
-three kinds of activity in order to make refactoring pull requests easy to
-review and uncontroversial. In all cases, refactoring PRs must not change the
-behavior of code within the pull request (bugs must be preserved as is).
+## "Decision Making" Process
+Merging decisions rest with maintainers and the lead maintainer, based on:
+- Alignment with LPSCoin’s goals (privacy, speed, luxury asset focus).
+- Meeting minimum standards (style, testing).
+- Contributor consensus via GitHub Issues and discussions.
 
-Project maintainers aim for a quick turnaround on refactoring pull requests, so
-where possible keep them short, un-complex and easy to verify.
+PRs must:
+- Serve a clear purpose (feature, bug fix, improvement).
+- Be well-reviewed.
+- Adhere to style guidelines.
 
+Consensus-critical changes (e.g., altering mixing rules) require extensive discussion on GitHub Issues, a detailed proposal, and broad technical agreement.
 
-"Decision Making" Process
--------------------------
+## Peer Review
+Anyone can review PRs via GitHub comments. Reviewers check for errors, test patches, and assess merits, using:
+- **ACK**: “Tested and approved” (e.g., `ACK abc123`).
+- **NACK**: “Disagree, with reason” (e.g., `NACK abc123: Breaks consensus`).
+- **utACK**: “Reviewed, looks good, untested” (e.g., `utACK abc123`).
+- **Concept ACK**: “Support the idea” (e.g., `Concept ACK`).
+- **Nit**: Minor feedback (e.g., `Nit: Rename var_x to varX`).
 
-The following applies to code changes to the lpscoins Core project, and is not to be
-confused with overall lpscoins Network Protocol consensus changes.
+Include the reviewed commit hash (e.g., `ACK abc123`). Maintainers weigh reviews by expertise and commitment, raising the bar for consensus-critical code.
 
-Whether a pull request is merged into lpscoins Core rests with the project merge
-maintainers and ultimately the project lead.
+## Finding Reviewers
+Review times vary due to volunteer availability. If your PR stalls:
+- **Release Freeze**: Wait if it’s a feature during a bug-fix-only period.
+- **Lack of Interest**: Reassess if it’s too broad or off-target; ask for concept feedback on GitHub Issues.
+- **Complexity**: Ping authors of related code (use `git blame`) via Issues or email.
+- **Long Delay**: After 1+ month on a simple PR, politely request review on Issues or via support@lpscoin.org.
 
-Maintainers will take into consideration if a patch is in line with the general
-principles of the project; meets the minimum standards for inclusion; and will
-judge the general consensus of contributors.
+## Release Policy
+The lead maintainer manages releases, targeting stability and feature readiness. Releases follow a roughly quarterly cadence (e.g., v4.1.0 from `configure.ac`), with dates announced on GitHub.
 
-In general, all pull requests must:
-
-  - have a clear use case, fix a demonstrable bug or serve the greater good of
-    the project (for example refactoring for modularisation);
-  - be well peer reviewed;
-  - follow code style guidelines;
-
-Patches that change lpscoins consensus rules are considerably more involved than
-normal because they affect the entire ecosystem and so must be preceded by
-extensive discussions and clear detailing. While each case will be different,
-one should be prepared to expend more time and effort than for other kinds of
-patches because of increased peer review and consensus building requirements.
-
-
-### Peer Review
-
-Anyone may participate in peer review which is expressed by comments in the pull
-request. Typically reviewers will review the code for obvious errors, as well as
-test out the patch set and opine on the technical merits of the patch. Project
-maintainers take into account the peer review when determining if there is
-consensus to merge a pull request (remember that discussions may have been
-spread out over GitHub, forums, email, and Slack discussions). The following
-language is used within pull-request comments:
-
-  - ACK means "I have tested the code and I agree it should be merged";
-  - NACK means "I disagree this should be merged", and must be accompanied by
-    sound technical justification (or in certain cases of copyright/patent/licensing
-    issues, legal justification). NACKs without accompanying reasoning may be
-    disregarded;
-  - utACK means "I have not tested the code, but I have reviewed it and it looks
-    OK, I agree it can be merged";
-  - Concept ACK means "I agree in the general principle of this pull request";
-  - Nit refers to trivial, often non-blocking issues.
-
-Reviewers should include the commit hash which they reviewed in their comments.
-
-Project maintainers reserve the right to weigh the opinions of peer reviewers
-using common sense judgement and also may weight based on meritocracy: Those
-that have demonstrated a deeper commitment and understanding towards the project
-(over time) or have clear domain expertise may naturally have more weight, as
-one would expect in all walks of life.
-
-Where a patch set affects consensus critical code, the bar will be set much
-higher in terms of discussion and peer review requirements, keeping in mind that
-mistakes could be very costly to the wider community. This includes refactoring
-of consensus critical code.
-
-Where a patch set proposes to change the lpscoins consensus, it must have been
-discussed extensively on the forums and Slack, be accompanied by a widely
-discussed Proposal and have a generally widely perceived technical consensus of being
-a worthwhile change based on the judgement of the maintainers.
-
-### Finding Reviewers
-
-As most reviewers are themselves developers with their own projects, the review
-process can be quite lengthy, and some amount of patience is required. If you find
-that you've been waiting for a pull request to be given attention for several
-months, there may be a number of reasons for this, some of which you can do something
-about:
-
-  - It may be because of a feature freeze due to an upcoming release. During this time,
-    only bug fixes are taken into consideration. If your pull request is a new feature,
-    it will not be prioritized until the release is over. Wait for release.
-  - It may be because the changes you are suggesting do not appeal to people. Rather than
-    nits and critique, which require effort and means they care enough to spend time on your
-    contribution, thundering silence is a good sign of widespread (mild) dislike of a given change
-    (because people don't assume *others* won't actually like the proposal). Don't take
-    that personally, though! Instead, take another critical look at what you are suggesting
-    and see if it: changes too much, is too broad, doesn't adhere to the
-    [developer notes](doc/developer-notes.md), is dangerous or insecure, is messily written, etc.
-    Identify and address any of the issues you find. Then ask e.g. on Slack if someone could give
-    their opinion on the concept itself.
-  - It may be because your code is too complex for all but a few people. And those people
-    may not have realized your pull request even exists. A great way to find people who
-    are qualified and care about the code you are touching is the
-    [Git Blame feature](https://help.github.com/articles/tracing-changes-in-a-file/). Simply
-    find the person touching the code you are touching before you and see if you can find
-    them and give them a nudge. Don't be incessant about the nudging though.
-  - Finally, if all else fails, ask on Slack or elsewhere for someone to give your pull request
-    a look. If you think you've been waiting an unreasonably long amount of time (month+) for
-    no particular reason (few lines changed, etc), this is totally fine. Try to return the favor
-    when someone else is asking for feedback on their code, and universe balances out.
-
-
-Release Policy
---------------
-
-The project leader is the release manager for each lpscoins Core release.
-
-Copyright
----------
-
-By contributing to this repository, you agree to license your work under the
-MIT license unless specified otherwise in `contrib/debian/copyright` or at
-the top of the file itself. Any work contributed where you are not the original
-author must contain its license header with the original author(s) and source.
+## Copyright
+Contributions are licensed under the MIT License unless specified in `contrib/debian/copyright` or file headers. Non-original work must retain its license and author credits.
