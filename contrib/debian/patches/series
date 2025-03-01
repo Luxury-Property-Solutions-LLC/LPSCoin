@@ -1,1 +1,10 @@
+# Patch series file for LPSCoin Debian packaging
+# This file lists patches to be applied to the LPSCoin source during Debian package building.
+# Format: one patch filename per line, in order of application.
+# See contrib/debian/patches/README for patch numbering scheme (0xxx, 1xxx, 2xxx).
+# Add patches here as needed and ensure they exist in this directory.
 
+# Example (uncomment and adjust as patches are added):
+# 0001-upstream-fix.patch
+# 1001-potential-upstream-enhancement.patch
+# 2001-debian-specific-config.patch
