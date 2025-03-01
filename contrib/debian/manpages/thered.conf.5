@@ -1,89 +1,127 @@
-.TH PIE.CONF "5" "January 2011" "lpscoins.conf 3.19"
+.TH THERED.CONF "5" "March 2025" "lpscoins.conf 4.1.0" "File Formats"
 .SH NAME
-lpscoins.conf \- lpscoins configuration file
+thered.conf \- LPSCoin configuration file
 .SH SYNOPSIS
-All command-line options (except for '\-conf') may be specified in a configuration file, and all configuration file options may also be specified on the command line. Command-line options override values set in the configuration file.
-.TP
-The configuration file is a list of 'setting=value' pairs, one per line, with optional comments starting with the '#' character.
-.TP
-The configuration file is not automatically created; you can create it using your favorite plain-text editor. By default, lpscoinsd(1) will look for a file named lpscoins.conf(5) in the lpscoins data directory, but both the data directory and the configuration file path may be changed using the '\-datadir' and '\-conf' command-line arguments.
+Configuration file for \fBlpscoinsd\fR(1) and \fBlpscoins-qt\fR(1).
+.SH DESCRIPTION
+The \fBthered.conf\fR (or \fBlpscoins.conf\fR) file contains configuration settings for the LPSCoin daemon (\fBlpscoinsd\fR) and GUI client (\fBlpscoins-qt\fR). All command-line options (except \fB-conf\fR) may be specified in this file, with command-line options taking precedence over file settings.
+
+The file is a plain-text list of \fIsetting=value\fR pairs, one per line. Comments begin with '#'. It is not created automatically; use a text editor to create it in the LPSCoin data directory.
+
 .SH LOCATION
-lpscoins.conf should be located in $HOME/.lpscoins
-.SH NETWORK-RELATED SETTINGS
+By default, \fBlpscoinsd\fR and \fBlpscoins-qt\fR look for \fBthered.conf\fR or \fBlpscoins.conf\fR in:
+- Linux: \fB$HOME/.lpscoin/\fR
+- macOS: \fB$HOME/Library/Application Support/LPSCoin/\fR
+- Windows: \fB%APPDATA%\\LPSCoin\\\fR
+
+Use \fB-datadir=\fR\fIdir\fR to specify a custom data directory or \fB-conf=\fR\fIfile\fR to set a different configuration file path.
+
+.SH NETWORK SETTINGS
 .TP
+\fBtestnet=\fR\fI[0|1]\fR
+Run on the test network instead of the main LPSCoin network (default: 0).
 .TP
-\fBtestnet=\fR[\fI'1'\fR|\fI'0'\fR]
-Enable or disable run on the test network instead of the real *lpscoins* network.
+\fBproxy=\fR\fIip:port\fR
+Connect through a SOCKS5 proxy (e.g., 127.0.0.1:9050 for Tor; default: none).
 .TP
-\fBproxy=\fR\fI'127.0.0.1:9050'\fR
-Connect via a socks4 proxy.
+\fBaddnode=\fR\fIip[:port]\fR
+Add a peer to connect to and advertise to other nodes (e.g., 69.164.218.197).
 .TP
-\fBaddnode=\fR\fI'10.0.0.2:53472'\fR
-Use as many *addnode=* settings as you like to connect to specific peers.
+\fBconnect=\fR\fIip[:port]\fR
+Connect only to specified peers, disabling incoming connections (e.g., 10.0.0.1:53472).
 .TP
-\fBconnect=\fR\fI'10.0.0.1:53472'\fR
-Use as many *connect=* settings as you like to connect ONLY to specific peers.
+\fBmaxconnections=\fR\fIn\fR
+Set maximum number of inbound and outbound connections (default: 125).
 .TP
-\fRmaxconnections=\fR\fI'value'\fR
-Maximum number of inbound+outbound connections.
+\fBlisten=\fR\fI[0|1]\fR
+Accept incoming connections (default: 1 unless \fBconnect=\fR is used).
+.TP
+\fBport=\fR\fIport\fR
+Listen for connections on \fIport\fR (default: 53472; testnet: 51474).
+.TP
+\fBupnp=\fR\fI[0|1]\fR
+Use UPnP to map the listening port (default: 1 when listening).
+
 .SH JSON-RPC OPTIONS
 .TP
-\fBserver=\fR[\fI'1'\fR|\fI'0'\fR]
-Tells *lpscoins* to accept or not accept JSON-RPC commands.
+\fBserver=\fR\fI[0|1]\fR
+Enable JSON-RPC server for remote commands (default: 0).
 .TP
-\fBrpcuser=\fR\fI'username'\fR
-You must set *rpcuser* to secure the JSON-RPC api.
+\fBrpcuser=\fR\fIusername\fR
+Username for JSON-RPC authentication (required if \fBserver=1\fR).
 .TP
-\fBrpcpassword=\fR\fI'password'\fR
-You must set *rpcpassword* to secure the JSON-RPC api.
+\fBrpcpassword=\fR\fIpassword\fR
+Password for JSON-RPC authentication (required if \fBserver=1\fR).
 .TP
-\fBrpcallowip=\fR\fI'192.168.1.*'\fR
-By default, only RPC connections from localhost are allowed. Specify as many *rpcallowip=* settings as you like to allow connections from other hosts (and you may use * as a wildcard character).
+\fBrpcport=\fR\fIport\fR
+Listen for JSON-RPC connections on \fIport\fR (default: 53473; testnet: 51475).
 .TP
-\fBrpcport=\fR\fI'53473'\fR
-Listen for RPC connections on this TCP port.
+\fBrpcallowip=\fR\fIip\fR
+Allow JSON-RPC connections from specified IP or subnet (e.g., 192.168.1.0/24; default: 127.0.0.1 only).
 .TP
-\fBrpcconnect=\fR\fI'127.0.0.1'\fR
-You can use *lpscoins* or *lpscoinsd(1)* to send commands to *lpscoins*/*lpscoinsd(1)* running on another host using this option.
+\fBrpcconnect=\fR\fIip\fR
+Send RPC commands to a remote host (default: 127.0.0.1).
 .TP
-\fBrpcssl=\fR\fI'1'\fR
-Use Secure Sockets Layer (also known as TLS or HTTPS) to communicate with *lpscoins* '\-server' or *lpscoinsd(1)*. Example of OpenSSL settings used when *rpcssl*='1':
+\fBrpcssl=\fR\fI[0|1]\fR
+Use SSL/TLS for RPC connections (default: 0; requires OpenSSL).
 .TP
-\fB\-rpcsslciphers=\fR<ciphers>
-Acceptable ciphers (default: TLSv1+HIGH:\:!SSLv2:\:!aNULL:\:!eNULL:\:!AH:\:!3DES:\:@STRENGTH)
+\fBrpcsslciphers=\fR\fIciphers\fR
+Set acceptable SSL/TLS ciphers (default: TLSv1.2+ECDHE-RSA-AES256-GCM-SHA384:!aNULL:!eNULL).
 .TP
-\fBrpcsslcertificatechainfile=\fR\fI'server.cert'\fR
+\fBrpcsslcertificatechainfile=\fR\fIfile\fR
+SSL certificate chain file (default: server.cert).
 .TP
-\fBrpcsslprivatekeyfile=\fR\fI'server.pem'\fR
+\fBrpcsslprivatekeyfile=\fR\fIfile\fR
+SSL private key file (default: server.pem).
+
+.SH WALLET OPTIONS
 .TP
-.SH MISCELLANEOUS OPTIONS
+\fBkeypool=\fR\fIn\fR
+Pre-generate \fIn\fR key pairs for wallet backups (default: 100).
 .TP
-\fBgen=\fR[\fI'0'\fR|\fI'1'\fR]
-Enable or disable attempt to generate PIEs.
+\fBpaytxfee=\fR\fIamount\fR
+Set transaction fee per kB (default: 0.0001).
 .TP
-\fB4way=\fR[\fI'0'\fR|\fI'1'\fR]
-Enable or disable use SSE instructions to try to generate PIEs faster.
-.TP
-\fBkeypool=\fR\fI'100'\fR
-Pre-generate this many public/private key pairs, so wallet backups will be valid for both prior transactions and several dozen future transactions.
-.TP
-\fBpaytxfee=\fR\fI'0.00'\fR
-Pay an optional transaction fee every time you send PIEs. Transactions with fees are more likely than free transactions to be included in generated blocks, so may be validated sooner.
-.TP
-\fBallowreceivebyip=\fR\fI'1'\fR
-Allow direct connections for the 'pay via IP address' feature.
-.TP
+\fBtxindex=\fR\fI[0|1]\fR
+Maintain a full transaction index (default: 0).
+
 .SH USER INTERFACE OPTIONS
 .TP
-\fBmin=\fR[\fI'0'\fR|\fI'1'\fR]
-Enable or disable start lpscoinsd minimized.
+\fBmin=\fR\fI[0|1]\fR
+Start \fBlpscoins-qt\fR minimized (default: 0).
 .TP
-\fBminimizetotray=\fR[\fI'0'\fR|\fI'1'\fR]
-Enable or disable minimize to the system tray.
-.SH "SEE ALSO"
-lpscoinsd(1)
+\fBminimizetotray=\fR\fI[0|1]\fR
+Minimize \fBlpscoins-qt\fR to the system tray (default: 0).
+.TP
+\fBsplash=\fR\fI[0|1]\fR
+Show splash screen on startup (default: 1).
+
+.SH MISCELLANEOUS OPTIONS
+.TP
+\fBdebug=\fR\fIcategory\fR
+Enable debug logging for specific categories (e.g., "rpc", "net"; default: none).
+.TP
+\fBdatadir=\fR\fIdir\fR
+Specify custom data directory (default: see \fBLOCATION\fR).
+
+.SH EXAMPLE
+A sample configuration file might look like:
+.nf
+# Enable RPC server
+server=1
+rpcuser=youruser
+rpcpassword=yourpassword
+rpcport=53473
+
+# Network settings
+addnode=69.164.218.197
+listen=1
+.fi
+
+.SH SEE ALSO
+.BR lpscoinsd (1),
+.BR lpscoins-qt (1),
+https://lpscoin.org/
+
 .SH AUTHOR
-This manual page was written by Micah Anderson <micah@debian.org> for the Debian system (but may be used by others). Permission is granted to copy, distribute and/or modify this document under the terms of the GNU General Public License, Version 3 or any later version published by the Free Software Foundation.
-
-On Debian systems, the complete text of the GNU General Public License can be found in /usr/share/common-licenses/GPL.
-
+This manual page was updated for LPSCoin 4.1.0 by contributors to the LPSCoin project. Originally written by Micah Anderson <micah@debian.org> for Debian, it is licensed under the GNU General Public License, version 3 or later. See \fB/usr/share/common-licenses/GPL\fR on Debian systems.
