@@ -1,203 +1,145 @@
-.TH PIE-QT "1" "February 2017" "lpscoins-qt 1"
+.TH LPSCOINS-QT "1" "March 2025" "lpscoins-qt 4.1.0" "User Commands"
 .SH NAME
-lpscoins-qt \- peer-to-peer network based digital currency
+lpscoins-qt \- peer-to-peer network based digital currency GUI client
+.SH SYNOPSIS
+.B lpscoins-qt
+[\fIoptions\fR]
 .SH DESCRIPTION
-.SS "Usage:"
-.IP
-lpscoins\-qt [command\-line options]
+LPSCoin-Qt is a graphical user interface for the LPSCoin cryptocurrency, a peer-to-peer network-based digital currency. It allows users to manage wallets, send and receive LPSCoins, and interact with the LPSCoin network. This manpage documents the command-line options available for starting the client.
+
 .SH OPTIONS
 .TP
-\-?
-This help message
+\fB\-?\fR, \fB\-h\fR, \fB\-\-help\fR
+Display this help message and exit.
 .TP
-\fB\-conf=\fR<file>
-Specify configuration file (default: lpscoins.conf)
+\fB\-version\fR
+Display version information and exit.
 .TP
-\fB\-pid=\fR<file>
-Specify pid file (default: lpscoinsd.pid)
+\fB\-conf=\fR\fIfile\fR
+Specify configuration file (default: \fBlpscoins.conf\fR or \fBthered.conf\fR in \fB~/.lpscoin/\fR).
 .TP
-\fB\-gen\fR
-Generate coins
+\fB\-datadir=\fR\fIdir\fR
+Specify data directory (default: \fB~/.lpscoin/\fR).
 .TP
-\fB\-gen\fR=\fI0\fR
-Don't generate coins
+\fB\-dbcache=\fR\fIn\fR
+Set database cache size in megabytes (default: 25).
 .TP
-\fB\-datadir=\fR<dir>
-Specify data directory
+\fB\-timeout=\fR\fIn\fR
+Set connection timeout in milliseconds (default: 5000).
 .TP
-\fB\-dbcache=\fR<n>
-Set database cache size in megabytes (default: 25)
+\fB\-proxy=\fR\fIip:port\fR
+Connect through a SOCKS5 proxy (e.g., 127.0.0.1:9050 for Tor).
 .TP
-\fB\-timeout=\fR<n>
-Specify connection timeout in milliseconds (default: 5000)
-.TP
-\fB\-proxy=\fR<ip:port>
-Connect through SOCKS5 proxy
-.TP
-\fB\-tor=\fR<ip:port>
-Use proxy to reach tor hidden services (default: same as \fB\-proxy\fR)
+\fB\-tor=\fR\fIip:port\fR
+Use a proxy to reach Tor hidden services (default: same as \fB\-proxy\fR).
 .TP
 \fB\-dns\fR
-Allow DNS lookups for \fB\-addnode\fR, \fB\-seednode\fR and \fB\-connect\fR
+Allow DNS lookups for \fB\-addnode\fR, \fB\-seednode\fR, and \fB\-connect\fR (default: 1).
 .TP
-\fB\-port=\fR<port>
-Listen for connections on <port> (default: 53472 or testnet: 51474)
+\fB\-port=\fR\fIport\fR
+Listen for connections on \fIport\fR (default: 53472; testnet: 51474).
 .TP
-\fB\-maxconnections=\fR<n>
-Maintain at most <n> connections to peers (default: 125)
+\fB\-maxconnections=\fR\fIn\fR
+Maintain at most \fIn\fR connections to peers (default: 125).
 .TP
-\fB\-addnode=\fR<ip>
-Add a node to connect to and attempt to keep the connection open
+\fB\-addnode=\fR\fIip[:port]\fR
+Add a node to connect to and keep the connection open.
 .TP
-\fB\-connect=\fR<ip>
-Connect only to the specified node(s)
+\fB\-connect=\fR\fIip[:port]\fR
+Connect only to the specified node(s); disables listening.
 .TP
-\fB\-seednode=\fR<ip>
-Connect to a node to retrieve peer addresses, and disconnect
+\fB\-seednode=\fR\fIip[:port]\fR
+Connect to a node to retrieve peer addresses, then disconnect.
 .TP
-\fB\-externalip=\fR<ip>
-Specify your own public address
+\fB\-externalip=\fR\fIip\fR
+Specify your own public IP address.
 .TP
-\fB\-onlynet=\fR<net>
-Only connect to nodes in network <net> (IPv4, IPv6 or Tor)
+\fB\-onlynet=\fR\fInet\fR
+Restrict connections to \fInet\fR (IPv4, IPv6, or Tor).
 .TP
 \fB\-discover\fR
-Discover own IP address (default: 1 when listening and no \fB\-externalip\fR)
-.TP
-\fB\-checkpoints\fR
-Only accept block chain matching built\-in checkpoints (default: 1)
+Discover own IP address (default: 1 when listening and no \fB\-externalip\fR).
 .TP
 \fB\-listen\fR
-Accept connections from outside (default: 1 if no \fB\-proxy\fR or \fB\-connect\fR)
+Accept incoming connections (default: 1 unless \fB\-connect\fR is used).
 .TP
-\fB\-bind=\fR<addr>
-Bind to given address and always listen on it. Use [host]:port notation for IPv6
+\fB\-bind=\fR\fIaddr\fR
+Bind to given address and always listen on it (e.g., 192.168.1.1:53472; use [host]:port for IPv6).
 .TP
 \fB\-dnsseed\fR
-Find peers using DNS lookup (default: 1 unless \fB\-connect\fR)
-.TP
-\fB\-banscore=\fR<n>
-Threshold for disconnecting misbehaving peers (default: 100)
-.TP
-\fB\-bantime=\fR<n>
-Number of seconds to keep misbehaving peers from reconnecting (default: 86400)
-.TP
-\fB\-maxreceivebuffer=\fR<n>
-Maximum per\-connection receive buffer, <n>*1000 bytes (default: 5000)
-.TP
-\fB\-maxsendbuffer=\fR<n>
-Maximum per\-connection send buffer, <n>*1000 bytes (default: 1000)
+Find peers using DNS lookup (default: 1 unless \fB\-connect\fR is used).
 .TP
 \fB\-upnp\fR
-Use UPnP to map the listening port (default: 1 when listening)
+Use UPnP to map the listening port (default: 1 when listening).
 .TP
-\fB\-paytxfee=\fR<amt>
-Fee per KB to add to transactions you send
+\fB\-paytxfee=\fR\fIamt\fR
+Set transaction fee per kB for sent transactions (default: 0.0001).
 .TP
 \fB\-server\fR
-Accept command line and JSON\-RPC commands
+Accept JSON-RPC commands (default: 0).
 .TP
 \fB\-testnet\fR
-Use the test network
+Use the test network instead of the main LPSCoin network.
 .TP
-\fB\-debug\fR
-Output extra debugging information. Implies all other \fB\-debug\fR* options
-.TP
-\fB\-debugnet\fR
-Output extra network debugging information
+\fB\-debug\fR[=\fIcategory\fR]
+Output extra debugging information (e.g., "rpc", "net"; default: none).
 .TP
 \fB\-logtimestamps\fR
-Prepend debug output with timestamp
-.TP
-\fB\-shrinkdebugfile\fR
-Shrink debug.log file on client startup (default: 1 when no \fB\-debug\fR)
+Prepend debug output with timestamps (default: 0).
 .TP
 \fB\-printtoconsole\fR
-Send trace/debug info to console instead of debug.log file
+Send debug info to console instead of debug.log (default: 0).
 .TP
-\fB\-rpcuser=\fR<user>
-Username for JSON\-RPC connections
+\fB\-rpcuser=\fR\fIuser\fR
+Username for JSON-RPC connections.
 .TP
-\fB\-rpcpassword=\fR<pw>
-Password for JSON\-RPC connections
+\fB\-rpcpassword=\fR\fIpw\fR
+Password for JSON-RPC connections.
 .TP
-\fB\-rpcport=\fR<port>
-Listen for JSON\-RPC connections on <port> (default: 53473 or testnet: 51475)
+\fB\-rpcport=\fR\fIport\fR
+Listen for JSON-RPC connections on \fIport\fR (default: 53473; testnet: 51475).
 .TP
-\fB\-rpcallowip=\fR<ip>
-Allow JSON\-RPC connections from specified IP address
-.TP
-\fB\-rpcthreads=\fR<n>
-Set the number of threads to service RPC calls (default: 4)
-.TP
-\fB\-blocknotify=\fR<cmd>
-Execute command when the best block changes (%s in cmd is replaced by block hash)
-.TP
-\fB\-walletnotify=\fR<cmd>
-Execute command when a wallet transaction changes (%s in cmd is replaced by TxID)
-.TP
-\fB\-alertnotify=\fR<cmd>
-Execute command when a relevant alert is received (%s in cmd is replaced by message)
-.TP
-\fB\-upgradewallet\fR
-Upgrade wallet to latest format
-.TP
-\fB\-keypool=\fR<n>
-Set key pool size to <n> (default: 100)
-.TP
-\fB\-rescan\fR
-Rescan the block chain for missing wallet transactions
-.TP
-\fB\-salvagewallet\fR
-Attempt to recover private keys from a corrupt wallet.dat
-.TP
-\fB\-checkblocks=\fR<n>
-How many blocks to check at startup (default: 288, 0 = all)
-.TP
-\fB\-checklevel=\fR<n>
-How thorough the block verification is (0\-4, default: 3)
-.TP
-\fB\-txindex\fR
-Maintain a full transaction index (default: 0)
-.TP
-\fB\-loadblock=\fR<file>
-Imports blocks from external blk000??.dat file
-.TP
-\fB\-reindex\fR
-Rebuild block chain index from current blk000??.dat files
-.TP
-\fB\-par=\fR<n>
-Set the number of script verification threads (1\-16, 0=auto, default: 0)
-.SS "Block creation options:"
-.TP
-\fB\-blockminsize=\fR<n>
-Set minimum block size in bytes (default: 0)
-.TP
-\fB\-blockmaxsize=\fR<n>
-Set maximum block size in bytes (default: 250000)
-.HP
-\fB\-blockprioritysize=\fR<n> Set maximum size of high\-priority/low\-fee transactions in bytes (default: 27000)
-.PP
-SSL options: (see the Bitcoin Wiki for SSL setup instructions)
-.TP
-\fB\-rpcssl\fR
-Use OpenSSL (https) for JSON\-RPC connections
-.TP
-\fB\-rpcsslcertificatechainfile=\fR<file.cert>
-Server certificate file (default: server.cert)
-.TP
-\fB\-rpcsslprivatekeyfile=\fR<file.pem>
-Server private key (default: server.pem)
-.TP
-\fB\-rpcsslciphers=\fR<ciphers>
-Acceptable ciphers (default: TLSv1+HIGH:!SSLv2:!aNULL:!eNULL:!AH:!3DES:@STRENGTH)
-.SS "UI options:"
-.TP
-\fB\-lang=\fR<lang>
-Set language, for example "de_DE" (default: system locale)
+\fB\-rpcallowip=\fR\fIip\fR
+Allow JSON-RPC connections from specified IP (e.g., 192.168.1.0/24).
 .TP
 \fB\-min\fR
-Start minimized
+Start minimized (default: 0).
 .TP
 \fB\-splash\fR
-Show splash screen on startup (default: 1)
+Show splash screen on startup (default: 1).
+.TP
+\fB\-lang=\fR\fIlang\fR
+Set language (e.g., "en_US"; default: system locale).
+.TP
+\fB\-keypool=\fR\fIn\fR
+Set key pool size to \fIn\fR (default: 100).
+.TP
+\fB\-rescan\fR
+Rescan the blockchain for missing wallet transactions on startup.
+.TP
+\fB\-upgradewallet\fR
+Upgrade wallet to the latest format on startup.
+.TP
+\fB\-txindex\fR
+Maintain a full transaction index (default: 0).
+.TP
+\fB\-reindex\fR
+Rebuild blockchain index from current blk*.dat files on startup.
+
+.SH CONFIGURATION FILE
+Options can also be specified in a configuration file, typically \fB~/.lpscoin/thered.conf\fR or \fBlpscoins.conf\fR. Command-line options override file settings. Example:
+.PP
+.nf
+rpcuser=youruser
+rpcpassword=yourpassword
+server=1
+testnet=0
+.fi
+
+.SH SEE ALSO
+.BR lpscoinsd (1),
+.BR thered.conf (5),
+https://lpscoin.org/
+
+.SH AUTHOR
+This manual page was updated for LPSCoin 4.1.0 by contributors to the LPSCoin project.
