@@ -1,3 +1,30 @@
-0xxx: Grabbed from upstream development.
-1xxx: Possibly relevant for upstream adoption.
-2xxx: Only relevant for official Debian release.
+Patch Management for LPSCoin Debian Packaging
+=============================================
+
+This directory contains patches applied to the LPSCoin source code for Debian packaging. Patches are organized using a numbered prefix scheme to indicate their origin and relevance:
+
+- **0xxx**: Patches sourced directly from upstream LPSCoin development (https://github.com/Luxury-Property-Solutions-LLC/LPSCoin). These are typically bug fixes or features already merged into the main repository as of version 4.1.0 (March 2025).
+- **1xxx**: Patches potentially suitable for upstream adoption. These address issues or enhancements that could benefit the broader LPSCoin project but have not yet been submitted or accepted upstream.
+- **2xxx**: Patches specific to the official Debian release. These are tailored for Debian packaging requirements (e.g., filesystem standards, dependencies) and are not intended for upstream inclusion.
+
+Patch Format
+------------
+Patches should follow the standard Debian quilt format:
+- Filename: `<number>-<description>.patch`
+- Include a header with `Description:`, `Author:`, and `Date:` fields.
+- Use `git format-patch` or `diff -u` for consistency.
+
+Applying Patches
+----------------
+To apply patches during Debian package building:
+1. Place patches in this directory.
+2. Update `debian/patches/series` with the patch filenames in the desired order.
+3. Use `quilt` or the Debian build system (`dpkg-source`) to apply them.
+
+Contributing
+------------
+- For upstream-relevant patches (1xxx), consider submitting a pull request to https://github.com/Luxury-Property-Solutions-LLC/LPSCoin.
+- For Debian-specific patches (2xxx), file issues or patches via the Debian bug tracker or this repository’s Debian packaging section.
+- Ensure patches align with LPSCoin 4.1.0 and test against the latest `lpscoinsd` and `lpscoins-qt` builds.
+
+Maintained by the LPSCoin Debian packaging team, March 2025.
