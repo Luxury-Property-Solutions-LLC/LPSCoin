@@ -1,5 +1,5 @@
-# Require Autoconf 2.60 or newer for AS_ECHO/AS_ECHO_N
-AC_PREREQ([2.60])
+# Require Autoconf 2.69 or newer for improved macro support and AS_VAR_IF
+AC_PREREQ([2.69])
 
 # Define version and metadata as m4 constants
 m4_define([CLIENT_VERSION_MAJOR], [4])
@@ -7,7 +7,7 @@ m4_define([CLIENT_VERSION_MINOR], [1])
 m4_define([CLIENT_VERSION_REVISION], [0])
 m4_define([CLIENT_VERSION_BUILD], [0])
 m4_define([CLIENT_VERSION_IS_RELEASE], [true])
-m4_define([COPYRIGHT_YEAR], [2022])
+m4_define([COPYRIGHT_YEAR], [2025])  # Updated to current year
 m4_define([CLIENT_VERSION], [CLIENT_VERSION_MAJOR.CLIENT_VERSION_MINOR.CLIENT_VERSION_REVISION])
 
 # Initialize Autoconf
@@ -28,7 +28,7 @@ AH_BOTTOM([#endif //LPSCOINS_CONFIG_H])
 # Disable faketime during configure (used only for make)
 AS_UNSET([FAKETIME])
 
-# Initialize Automake with cleaner options
+# Initialize Automake with modern options
 AM_INIT_AUTOMAKE([1.13 foreign subdir-objects])
 AM_MAINTAINER_MODE([enable])
 
@@ -48,7 +48,11 @@ LT_INIT([pic-only])
 
 # Default compiler flags (unless overridden)
 AS_IF([test "x$CXXFLAGS_overridden" = "xno"],
-      [CXXFLAGS="$CXXFLAGS -Wall -Wextra -Wformat -Wformat-security -Wno-unused-parameter"])
+      [AX_CHECK_COMPILE_FLAG([-Wall], [CXXFLAGS="$CXXFLAGS -Wall"])
+       AX_CHECK_COMPILE_FLAG([-Wextra], [CXXFLAGS="$CXXFLAGS -Wextra"])
+       AX_CHECK_COMPILE_FLAG([-Wformat], [CXXFLAGS="$CXXFLAGS -Wformat"])
+       AX_CHECK_COMPILE_FLAG([-Wformat-security], [CXXFLAGS="$CXXFLAGS -Wformat-security"])
+       AX_CHECK_COMPILE_FLAG([-Wno-unused-parameter], [CXXFLAGS="$CXXFLAGS -Wno-unused-parameter"])])
 CPPFLAGS="$CPPFLAGS -DBOOST_SPIRIT_THREADSAFE -DHAVE_BUILD_INFO -D__STDC_FORMAT_MACROS"
 
 # Tool detection
@@ -69,7 +73,7 @@ AC_PATH_TOOLS([CPPFILT], [c++filt])
 AC_PATH_TOOLS([OBJCOPY], [objcopy])
 
 # Include pkg-config m4 if not found system-wide
-m4_include([pkg.m4])
+m4_ifndef([PKG_PROG_PKG_CONFIG], [m4_fatal([pkg.m4 not found in AC_CONFIG_MACRO_DIR])])
 PKG_PROG_PKG_CONFIG
 
 # Configuration options
@@ -139,11 +143,14 @@ AC_ARG_ENABLE([masternodes],
 
 # Debug mode settings
 AS_IF([test "x$enable_debug" = "xyes"],
-      [CFLAGS="-g3 -O0 -DDEBUG"
-       CXXFLAGS="-g3 -O0 -DDEBUG"
+      [AX_CHECK_COMPILE_FLAG([-g3], [CFLAGS="$CFLAGS -g3" CXXFLAGS="$CXXFLAGS -g3"])
+       AX_CHECK_COMPILE_FLAG([-O0], [CFLAGS="$CFLAGS -O0" CXXFLAGS="$CXXFLAGS -O0"])
+       AC_DEFINE([DEBUG], [1], [Define if debugging is enabled])
        AS_IF([test "x$TARGET_OS" != "xwindows"],
-             [CXXFLAGS="$CXXFLAGS -fsanitize=address,undefined"
-              LDFLAGS="$LDFLAGS -fsanitize=address,undefined"])])
+             [AX_CHECK_COMPILE_FLAG([-fsanitize=address], [CXXFLAGS="$CXXFLAGS -fsanitize=address"])
+              AX_CHECK_COMPILE_FLAG([-fsanitize=undefined], [CXXFLAGS="$CXXFLAGS -fsanitize=undefined"])
+              AX_CHECK_LINK_FLAG([-fsanitize=address], [LDFLAGS="$LDFLAGS -fsanitize=address"])
+              AX_CHECK_LINK_FLAG([-fsanitize=undefined], [LDFLAGS="$LDFLAGS -fsanitize=undefined"])])])
 
 # Platform-specific settings
 use_pkgconfig=yes
@@ -153,13 +160,14 @@ case $host in
     TARGET_OS=windows
     AC_CHECK_LIBS([mingwthrd kernel32 user32 gdi32 comdlg32 winspool winmm shell32 comctl32 ole32 oleaut32 uuid rpcrt4 advapi32 ws2_32 mswsock shlwapi iphlpapi crypt32], [main], [],
                   [AC_MSG_ERROR([Required Windows library missing])])
-    AX_CHECK_LINK_FLAG([[-static-libgcc -static-libstdc++]], [LIBTOOL_APP_LDFLAGS="$LIBTOOL_APP_LDFLAGS -static-libgcc -static-libstdc++"])
+    AX_CHECK_LINK_FLAG([[-static-libgcc]], [LIBTOOL_APP_LDFLAGS="$LIBTOOL_APP_LDFLAGS -static-libgcc"])
+    AX_CHECK_LINK_FLAG([[-static-libstdc++]], [LIBTOOL_APP_LDFLAGS="$LIBTOOL_APP_LDFLAGS -static-libstdc++"])
     AC_PATH_PROGS([MAKENSIS], [makensis], [none])
     AS_IF([test "x$MAKENSIS" = "xnone"], [AC_MSG_WARN([makensis not found; cannot create installer])])
     AC_PATH_TOOLS([WINDRES], [windres], [], [AC_MSG_ERROR([windres not found])])
     CPPFLAGS="$CPPFLAGS -D_MT -DWIN32 -D_WINDOWS -DBOOST_THREAD_USE_LIB"
     LEVELDB_TARGET_FLAGS="TARGET_OS=OS_WINDOWS_CROSSCOMPILE"
-    AS_IF([test "x$CXXFLAGS_overridden" = "xno"], [CXXFLAGS="$CXXFLAGS -w"])
+    AS_IF([test "x$CXXFLAGS_overridden" = "xno"], [AX_CHECK_COMPILE_FLAG([-w], [CXXFLAGS="$CXXFLAGS -w"])])
     case $host in
       i?86-*) WINDOWS_BITS=32 ;;
       x86_64-*) WINDOWS_BITS=64 ;;
@@ -183,9 +191,9 @@ case $host in
                          LIBS="$LIBS -L/opt/local/lib/db48"])])
            AC_CHECK_PROGS([BREW], [brew])
            AS_IF([test "x$BREW" = "xbrew"],
-                 [openssl_prefix=`$BREW --prefix openssl 2>/dev/null`
-                  bdb_prefix=`$BREW --prefix berkeley-db4 2>/dev/null`
-                  qt5_prefix=`$BREW --prefix qt5 2>/dev/null`
+                 [openssl_prefix=`$BREW --prefix openssl@3 2>/dev/null || $BREW --prefix openssl 2>/dev/null`
+                  bdb_prefix=`$BREW --prefix berkeley-db@4 2>/dev/null || $BREW --prefix berkeley-db 2>/dev/null`
+                  qt5_prefix=`$BREW --prefix qt@5 2>/dev/null || $BREW --prefix qt 2>/dev/null`
                   AS_IF([test "x$openssl_prefix" != "x"], [PKG_CONFIG_PATH="$openssl_prefix/lib/pkgconfig:$PKG_CONFIG_PATH"])
                   AS_IF([test "x$bdb_prefix" != "x"], [CPPFLAGS="$CPPFLAGS -I$bdb_prefix/include" LIBS="$LIBS -L$bdb_prefix/lib"])
                   AS_IF([test "x$qt5_prefix" != "x"], [PKG_CONFIG_PATH="$qt5_prefix/lib/pkgconfig:$PKG_CONFIG_PATH"])
@@ -223,7 +231,8 @@ AS_IF([test "x$use_glibc_compat" != "xno"],
 
 AS_IF([test "x$use_hardening" != "xno"],
       [AX_CHECK_COMPILE_FLAG([-Wstack-protector], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -Wstack-protector"])
-       AX_CHECK_COMPILE_FLAG([-fstack-protector-all], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fstack-protector-all"])
+       AX_CHECK_COMPILE_FLAG([-fstack-protect-strong], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fstack-protect-strong"], [],
+                             [AX_CHECK_COMPILE_FLAG([-fstack-protector-all], [HARDENED_CXXFLAGS="$HARDENED_CXXFLAGS -fstack-protector-all"])])
        AX_CHECK_PREPROC_FLAG([-D_FORTIFY_SOURCE=2], [HARDENED_CPPFLAGS="$HARDENED_CPPFLAGS -U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=2"])
        AX_CHECK_LINK_FLAG([[-Wl,--dynamicbase]], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,--dynamicbase"])
        AX_CHECK_LINK_FLAG([[-Wl,--nxcompat]], [HARDENED_LDFLAGS="$HARDENED_LDFLAGS -Wl,--nxcompat"])
@@ -260,7 +269,7 @@ AS_IF([test "x$use_boost" = "xyes"],
        AX_BOOST_PROGRAM_OPTIONS
        AX_BOOST_THREAD
        AX_BOOST_CHRONO
-       BOOST_LIBS="$BOOST_LDFLAGS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB $BOOST_PROGRAM_OPTIONS_LIB $BOOST_THREAD_LIB"
+       BOOST_LIBS="$BOOST_LDFLAGS $BOOST_SYSTEM_LIB $BOOST_FILESYSTEM_LIB $BOOST_PROGRAM_OPTIONS_LIB $BOOST_THREAD_LIB $BOOST_CHRONO_LIB"
        AS_IF([test "x$ax_cv_boost_chrono" = "xyes"],
              [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <boost/thread/thread.hpp>
                                                 #include <boost/version.hpp>]],
@@ -269,8 +278,7 @@ AS_IF([test "x$use_boost" = "xyes"],
                                                 #else
                                                 choke me
                                                 #endif]])],
-                             [AC_DEFINE([HAVE_WORKING_BOOST_SLEEP_FOR], [1], [Define if boost sleep_for works])
-                              BOOST_LIBS="$BOOST_LIBS $BOOST_CHRONO_LIB"],
+                             [AC_DEFINE([HAVE_WORKING_BOOST_SLEEP_FOR], [1], [Define if boost sleep_for works])],
                              [AC_LINK_IFELSE([AC_LANG_PROGRAM([[#include <boost/version.hpp>
                                                                 #include <boost/thread.hpp>
                                                                 #include <boost/date_time/posix_time/posix_time_types.hpp>]],
