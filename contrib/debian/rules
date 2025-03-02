@@ -1,24 +1,27 @@
 #!/usr/bin/make -f
 # -*- mode: makefile; coding: utf-8 -*-
 
-#DEB_MAKE_CHECK_TARGET = test_pivx
-#build/bitcoind::
-#	$(if $(filter nocheck,$(DEB_BUILD_OPTIONS)),,src/test_pivx)
+# Uncomment to enable tests; requires libboost-test-dev
+# DEB_MAKE_CHECK_TARGET = check
 
-DEB_INSTALL_EXAMPLES_bitcoind += debian/examples/*
-DEB_INSTALL_MANPAGES_bitcoind += debian/manpages/*
+# Install example config and manpages for lpscoinsd
+DEB_INSTALL_EXAMPLES_lpscoinsd += debian/examples/*
+DEB_INSTALL_MANPAGES_lpscoinsd += debian/manpages/*
 
+# Default rule: use debhelper with bash-completion
 %:
 	dh --with bash-completion $@
 
+# Clean up generated files
 override_dh_auto_clean:
 	if [ -f Makefile ]; then $(MAKE) distclean; fi
-	rm -rf Makefile.in aclocal.m4 configure src/Makefile.in src/pivx-config.h.in src/build-aux src/qt/Makefile.in src/qt/test/Makefile.in src/test/Makefile.in
+	rm -rf Makefile.in aclocal.m4 configure src/Makefile.in src/lpscoin-config.h.in src/build-aux src/qt/Makefile.in src/qt/test/Makefile.in src/test/Makefile.in
 
-# Yea, autogen should be run on the source archive, but I like doing git archive
+# Run autogen.sh and configure with default options
 override_dh_auto_configure:
 	./autogen.sh
-	./configure
+	./configure --prefix=/usr
 
+# Run tests if not disabled by DEB_BUILD_OPTIONS=nocheck
 override_dh_auto_test:
-	make check
+	if [ -z "$(filter nocheck,$(DEB_BUILD_OPTIONS))" ]; then $(MAKE) check; fi
