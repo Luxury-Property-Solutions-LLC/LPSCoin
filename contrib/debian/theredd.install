@@ -1,2 +1,2 @@
-usr/local/bin/lpscoinsd usr/bin
-usr/local/bin/lpscoins-cli usr/bin
+usr/bin/lpscoinsd usr/bin
+usr/bin/lpscoins-cli usr/bin
