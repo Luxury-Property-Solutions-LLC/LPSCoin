@@ -1,6 +1,6 @@
-usr/local/bin/lpscoins-qt usr/bin
-share/pixmaps/bitcoin32.xpm usr/share/pixmaps
-share/pixmaps/bitcoin16.xpm usr/share/pixmaps
-share/pixmaps/bitcoin128.png usr/share/pixmaps
-debian/lpscoins-qt.desktop usr/share/applications
-debian/lpscoins-qt.protocol usr/share/kde4/services/
+usr/bin/lpscoins-qt usr/bin
+share/pixmaps/lpscoins32.xpm usr/share/pixmaps
+share/pixmaps/lpscoins16.xpm usr/share/pixmaps
+share/pixmaps/lpscoins128.png usr/share/pixmaps
+debian/thered-qt.desktop usr/share/applications
+debian/lpscoins-qt.protocol usr/share/kde4/services
