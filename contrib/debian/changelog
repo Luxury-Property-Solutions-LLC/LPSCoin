@@ -1,3 +1,13 @@
+lpscoin (4.1.0-1) unstable; urgency=medium
+
+  * New upstream release of LPSCoin (forked from Bitcoin).
+  * Update to version 4.1.0, featuring enhanced wallet and network features.
+  * Adjust package name from `bitcoin` to `lpscoin` to reflect project identity.
+  * Update manpages, config examples, and desktop files for LPSCoin branding.
+  * Build with modern dependencies (e.g., Boost 1.64+, Qt5/6 support).
+
+ -- LPSCoin Debian Team <team@lpscoin.org>  Sat, 01 Mar 2025 12:00:00 -0500
+
 bitcoin (0.9.3-precise1) precise; urgency=medium
 
   * New upstream releases.
