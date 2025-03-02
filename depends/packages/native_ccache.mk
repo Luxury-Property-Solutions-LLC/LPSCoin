@@ -1,25 +1,25 @@
 package=native_ccache
-$(package)_version=3.2.5
-$(package)_download_path=http://samba.org/ftp/ccache
-$(package)_file_name=ccache-$($(package)_version).tar.bz2
-$(package)_sha256_hash=7a553809e90faf9de3a23ee9c5b5f786cfd4836bf502744bedb824a24bee1097
+$(package)_version=4.10.2
+$(package)_download_path=https://download.samba.org/pub/ccache/
+$(package)_file_name=ccache-$($(package)_version).tar.xz
+$(package)_sha256_hash=4db23e3d6c7d13e2c32c392aacdd7c6b295cdca69128616bd9e0b2a7ae4127d8
 
 define $(package)_set_vars
-$(package)_config_opts=
+  $(package)_config_opts=--prefix=$($(package)_staging_prefix_dir)
 endef
 
 define $(package)_config_cmds
-  $($(package)_autoconf)
+  ./configure $($(package)_config_opts) || exit 1
 endef
 
 define $(package)_build_cmds
-  $(MAKE)
+  $(MAKE) || exit 1
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) DESTDIR=$($(package)_staging_dir) install
+  $(MAKE) DESTDIR=$($(package)_staging_dir) install || exit 1
 endef
 
 define $(package)_postprocess_cmds
-  rm -rf lib include
+  rm -rf lib include || exit 1
 endef
