@@ -1,1 +1,1 @@
-contrib/lpscoinsd.bash-completion	lpscoinsd
+contrib/completion/lpscoinsd.bash-completion	/usr/share/bash-completion/completions/lpscoinsd
