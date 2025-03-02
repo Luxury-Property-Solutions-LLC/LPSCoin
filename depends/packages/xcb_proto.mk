@@ -1,27 +1,27 @@
 package=xcb_proto
-$(package)_version=1.10
-$(package)_download_path=http://xcb.freedesktop.org/dist
-$(package)_file_name=xcb-proto-$($(package)_version).tar.bz2
-$(package)_sha256_hash=7ef40ddd855b750bc597d2a435da21e55e502a0fefa85b274f2c922800baaf05
+$(package)_version=1.17.0
+$(package)_download_path=https://xcb.freedesktop.org/dist
+$(package)_file_name=xcb-proto-$($(package)_version).tar.xz
+$(package)_sha256_hash=2c8736f97c8e49974431d68c7a3f9d25e04e79e6219d95db2f0a5a089a8e6db2
 
 define $(package)_set_vars
-  $(package)_config_opts=--disable-shared
+  $(package)_config_opts=--prefix=$(host_prefix)
   $(package)_config_opts_linux=--with-pic
 endef
 
 define $(package)_config_cmds
-  $($(package)_autoconf)
+  ./configure $($(package)_config_opts) || exit 1
 endef
 
 define $(package)_build_cmds
-  $(MAKE)
+  $(MAKE) || exit 1
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) DESTDIR=$($(package)_staging_dir) install
+  $(MAKE) DESTDIR=$($(package)_staging_dir) install || exit 1
 endef
 
 define $(package)_postprocess_cmds
-  find -name "*.pyc" -delete && \
-  find -name "*.pyo" -delete
+  find $($(package)_staging_dir) -name "*.pyc" -delete || exit 1 && \
+  find $($(package)_staging_dir) -name "*.pyo" -delete || exit 1
 endef
