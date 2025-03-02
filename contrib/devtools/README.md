@@ -1,94 +1,67 @@
-Contents
-===========
-This directory contains tools for developers working on this repository.
+# Developer Tools for LPSCoin
+This directory contains tools for developers working on the LPSCoin repository.
+## check-doc.py
+Check if all command-line arguments for `lpscoinsd` and `lpscoins-qt` are documented. The return value indicates the number of undocumented arguments.
+## github-merge.py
+A script to automate secure merging of pull requests with GPG signing.
+Example:./github-merge.py 3077
 
-check-doc.py
-============
-
-Check if all command line args are documented. The return value indicates the
-number of undocumented args.
-
-github-merge.py
-===============
-
-A small script to automate merging pull-requests securely and sign them with GPG.
-
-For example:
-
-  ./github-merge.py 3077
-
-(in any git repository) will help you merge pull request #3077 for the
-lpscoins-Project/lpscoins repository.
-
+Merges pull request #3077 from the `Luxury-Property-Solutions-LLC/LPSCoin` repository.
 What it does:
-* Fetch master and the pull request.
-* Locally construct a merge commit.
-* Show the diff that merge results in.
-* Ask you to verify the resulting source tree (so you can do a make
-check or whatever).
-* Ask you whether to GPG sign the merge commit.
-* Ask you whether to push the result upstream.
+- Fetches the master branch and the pull request.
+- Constructs a local merge commit.
+- Displays the resulting diff.
+- Prompts to verify the source tree (e.g., run `make check`).
+- Asks to GPG-sign the merge commit.
+- Asks to push the merge upstream.
+This avoids race conditions (e.g., pull request updates during review) and ensures source integrity with GPG signatures.
+### Setup
+Configure for LPSCoin:
+./github-merge.py 3077
+Merges pull request #3077 from the `Luxury-Property-Solutions-LLC/LPSCoin` repository.
+What it does:
+- Fetches the master branch and the pull request.
+- Constructs a local merge commit.
+- Displays the resulting diff.
+- Prompts to verify the source tree (e.g., run `make check`).
+- Asks to GPG-sign the merge commit.
+- Asks to push the merge upstream.
+This avoids race conditions (e.g., pull request updates during review) and ensures source integrity with GPG signatures.
+### Setup
+Configure for LPSCoin:
+git config githubmerge.repository Luxury-Property-Solutions-LLC/LPSCoin
+git config githubmerge.testcmd "make -j4 check"  # Adjust for your testing needs
+git config --global user.signingkey <YOUR_GPG_KEY_ID>  # For GPG signing
+## optimize-pngs.py
+Optimizes PNG files in the LPSCoin repository using `pngcrush`. Requires `pngcrush` installed.
+Example:
+## optimize-pngs.py
+Optimizes PNG files in the LPSCoin repository using `pngcrush`. Requires `pngcrush` installed.
+Example:
+./optimize-pngs.py
+## fix-copyright-headers.py
+Updates copyright headers in `.cpp` and `.h` files to include the current year for files modified in that year. Run from `src/`.
+Example (for 2025):
+// Copyright (c) 2009-2024 The LPSCoin Developers
+becomes:
 
-This means that there are no potential race conditions (where a
-pullreq gets updated while you're reviewing it, but before you click
-merge), and when using GPG signatures, that even a compromised GitHub
-couldn't mess with the sources.
+// Copyright (c) 2009-2025 The LPSCoin Developers
 
-Setup
----------
-Configuring the github-merge tool for the lpscoins repository is done in the following way:
+Usage:
+cd src && ../contrib/devtools/fix-copyright-headers.py
+## symbol-check.py
+Checks that Linux executables from a Gitian build only use allowed `gcc`, `glibc`, and `libstdc++` version symbols, ensuring compatibility with minimum supported distributions.
+Example after a Gitian build:
 
-    git config githubmerge.repository lpscoins-Project/lpscoins
-    git config githubmerge.testcmd "make -j4 check" (adapt to whatever you want to use for testing)
-    git config --global user.signingkey mykeyid (if you want to GPG sign)
+find ../gitian-builder/build -type f -executable | xargs python3 contrib/devtools/symbol-check.py
 
-optimize-pngs.py
-================
+- Returns 0 with no output if only supported symbols are used.
+- Returns 1 with a list of unsupported symbols if detected (e.g., `memcpy` from `GLIBC_2.14`).
+## update-translations.py
+Updates translations from Transifex, processes them into a committable format, and adds missing translations to the build system. Run from the repository root.
+Usage:
 
-A script to optimize png files in the lpscoins
-repository (requires pngcrush).
+python3 contrib/devtools/update-translations.py
 
-fix-copyright-headers.py
-===========================
+See `doc/translation-process.md` for details.
 
-Every year newly updated files need to have its copyright headers updated to reflect the current year.
-If you run this script from src/ it will automatically update the year on the copyright header for all
-.cpp and .h files if these have a git commit from the current year.
-
-For example a file changed in 2014 (with 2014 being the current year):
-```// Copyright (c) 2009-2013 The Bitcoin developers```
-
-would be changed to:
-```// Copyright (c) 2009-2014 The Bitcoin developers```
-
-symbol-check.py
-===============
-
-A script to check that the (Linux) executables produced by gitian only contain
-allowed gcc, glibc and libstdc++ version symbols. This makes sure they are
-still compatible with the minimum supported Linux distribution versions.
-
-Example usage after a gitian build:
-
-    find ../gitian-builder/build -type f -executable | xargs python contrib/devtools/symbol-check.py
-
-If only supported symbols are used the return value will be 0 and the output will be empty.
-
-If there are 'unsupported' symbols, the return value will be 1 a list like this will be printed:
-
-    .../64/test_lpscoins: symbol memcpy from unsupported version GLIBC_2.14
-    .../64/test_lpscoins: symbol __fdelt_chk from unsupported version GLIBC_2.15
-    .../64/test_lpscoins: symbol std::out_of_range::~out_of_range() from unsupported version GLIBCXX_3.4.15
-    .../64/test_lpscoins: symbol _ZNSt8__detail15_List_nod from unsupported version GLIBCXX_3.4.15
-
-update-translations.py
-======================
-
-Run this script from the root of the repository to update all translations from transifex.
-It will do the following automatically:
-
-- fetch all translations
-- post-process them into valid and committable format
-- add missing translations to the build system (TODO)
-
-See doc/translation-process.md for more information.
