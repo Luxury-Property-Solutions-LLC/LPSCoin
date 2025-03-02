@@ -1,12 +1,13 @@
 [Desktop Entry]
 Encoding=UTF-8
-Name=lpscoins
-Comment=lpscoins P2P Cryptocurrency
-Comment[fr]=lpscoins, monnaie virtuelle cryptographique pair à pair
-Comment[tr]=lpscoins, eşten eşe kriptografik sanal para birimi
+Name=LPSCoin-Qt
+Comment=LPSCoin P2P Cryptocurrency Client
+Comment[fr]=Client LPSCoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=LPSCoin-Qt, eşten eşe kriptografik sanal para birimi istemcisi
 Exec=lpscoins-qt %u
 Terminal=false
 Type=Application
 Icon=lpscoins128
-MimeType=x-scheme-handler/lpscoins;
-Categories=Office;Finance;
+MimeType=x-scheme-handler/lpscoin;
+Categories=Office;Finance;P2P;
+StartupNotify=true
