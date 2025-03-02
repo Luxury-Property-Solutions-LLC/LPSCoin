@@ -1,58 +1,58 @@
-Source: pivx
+Source: lpscoin
 Section: utils
 Priority: optional
-Maintainer: Jonas Smedegaard <dr@jones.dk> ***TODO***
-Uploaders: Micah Anderson <micah@debian.org> ***TODO***
-Build-Depends: debhelper,
- devscripts,
- automake,
- libtool,
- bash-completion,
- libboost-system-dev (>> 1.35) | libboost-system1.35-dev,
- libdb4.8++-dev,
- libssl-dev,
- pkg-config,
- libminiupnpc8-dev,
- libboost-filesystem-dev (>> 1.35) | libboost-filesystem1.35-dev,
- libboost-program-options-dev (>> 1.35) | libboost-program-options1.35-dev,
- libboost-thread-dev (>> 1.35) | libboost-thread1.35-dev,
- libboost-test-dev (>> 1.35) | libboost-test1.35-dev,
- qt4-qmake,
- libqt4-dev,
- libqrencode-dev,
- libprotobuf-dev, protobuf-compiler
-Standards-Version: 3.9.2
-Homepage: http://www.pivx.org
-Vcs-Git: git://github.com/PIVX-Project/PIVX.git
-Vcs-Browser: http://github.com/PIVX-Project/PIVX
+Maintainer: LPSCoin Debian Team <team@lpscoin.org>
+Uploaders: Micah Anderson <micah@debian.org>
+Build-Depends: debhelper (>= 13),
+               devscripts,
+               automake,
+               libtool,
+               bash-completion,
+               libboost-system-dev (>= 1.64),
+               libboost-filesystem-dev (>= 1.64),
+               libboost-program-options-dev (>= 1.64),
+               libboost-thread-dev (>= 1.64),
+               libboost-test-dev (>= 1.64),
+               libdb4.8++-dev,
+               libssl-dev,
+               pkg-config,
+               libminiupnpc-dev,
+               qtbase5-dev | qt6-base-dev,
+               libqt5gui5 | libqt6gui6,
+               libqrencode-dev,
+               libprotobuf-dev,
+               protobuf-compiler
+Standards-Version: 4.6.2
+Homepage: https://lpscoin.org
+Vcs-Git: git://github.com/Luxury-Property-Solutions-LLC/LPSCoin.git
+Vcs-Browser: https://github.com/Luxury-Property-Solutions-LLC/LPSCoin
 
-Package: pivxd
+Package: lpscoinsd
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - daemon
- Pivx is a free open source peer-to-peer electronic cash system that
- is completely decentralized, without the need for a central server or
- trusted parties.  Users hold the crypto keys to their own money and
- transact directly with each other, with the help of a P2P network to
- check for double-spending.
+ LPSCoin is a free, open-source, peer-to-peer electronic cash system that
+ is fully decentralized, without a central server or trusted parties.
+ Users manage their own crypto keys and transact directly, with the P2P
+ network ensuring no double-spending.
  .
- Full transaction history is stored locally at each client.  This
- requires 1+ GB of space, slowly growing.
+ Full transaction history is stored locally, requiring 1+ GB of space,
+ growing over time.
  .
- This package provides the daemon, pivxd, and the CLI tool
- pivx-cli to interact with the daemon.
+ This package provides `lpscoinsd`, the daemon for managing the LPSCoin
+ blockchain and network.
 
-Package: pivx-qt
+Package: lpscoins-qt
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
 Description: peer-to-peer network based digital currency - Qt GUI
- Pivx is a free open source peer-to-peer electronic cash system that
- is completely decentralized, without the need for a central server or
- trusted parties.  Users hold the crypto keys to their own money and
- transact directly with each other, with the help of a P2P network to
- check for double-spending.
+ LPSCoin is a free, open-source, peer-to-peer electronic cash system that
+ is fully decentralized, without a central server or trusted parties.
+ Users manage their own crypto keys and transact directly, with the P2P
+ network ensuring no double-spending.
  .
- Full transaction history is stored locally at each client.  This
- requires 1+ GB of space, slowly growing.
+ Full transaction history is stored locally, requiring 1+ GB of space,
+ growing over time.
  .
- This package provides Pivx-Qt, a GUI for Pivx based on Qt.
+ This package provides `lpscoins-qt`, a graphical interface for LPSCoin
+ built with Qt.
