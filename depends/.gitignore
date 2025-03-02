@@ -1,10 +1,22 @@
-SDKs/
-work/
-built/
-sources/
+# Build directories
+SDKs
+work
+built
+sources
+
+# Configuration files
 config.site
+
+# Architecture-specific outputs
 x86_64*
 i686*
 mips*
 arm*
 aarch64*
+powerpc*
+
+# Temporary/generated files
+*.log
+*.cache
+*.o
+*.a
