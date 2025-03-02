@@ -1,11 +1,13 @@
 [Protocol]
-exec=lpscoins-qt '%u'
-protocol=lpscoins
+exec=lpscoins-qt "%u"
+protocol=lpscoin
 input=none
 output=none
 helper=true
-listing=
+listing=false
 reading=false
 writing=false
 makedir=false
 deleting=false
+Description=LPSCoin URI Handler
+Icon=lpscoins128
