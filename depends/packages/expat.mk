@@ -1,11 +1,13 @@
 package=expat
-$(package)_version=2.1.1
-$(package)_download_path=https://downloads.sourceforge.net/project/expat/expat/$($(package)_version)
-$(package)_file_name=$(package)-$($(package)_version).tar.bz2
-$(package)_sha256_hash=aff584e5a2f759dcfc6d48671e9529f6afe1e30b0cd6a4cec200cbe3f793de67
+$(package)_version:=2.6.2
+$(package)_download_path:=https://github.com/libexpat/libexpat/releases/download/R_2_6_2
+$(package)_file_name:=$(package)-$($(package)_version).tar.bz2
+$(package)_sha256_hash:=c751b75726eddfcf4fa33f165db3a7067d66f3a659ba4a8e8714e5d91e843d12
+$(package)_autoconf:=configure
 
 define $(package)_set_vars
-$(package)_config_opts=--disable-static
+  $(package)_config_opts:=--disable-shared
+  $(package)_config_opts_linux:=--with-pic
 endef
 
 define $(package)_config_cmds
@@ -13,9 +15,9 @@ define $(package)_config_cmds
 endef
 
 define $(package)_build_cmds
-  $(MAKE)
+  $(MAKE) || exit 1
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) DESTDIR=$($(package)_staging_dir) install
+  $(MAKE) DESTDIR=$($(package)_staging_dir) install || exit 1
 endef
