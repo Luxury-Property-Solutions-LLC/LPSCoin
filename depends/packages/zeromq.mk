@@ -1,27 +1,26 @@
 package=zeromq
-$(package)_version=4.1.4
-$(package)_download_path=http://download.zeromq.org
+$(package)_version=4.3.5
+$(package)_download_path=https://github.com/zeromq/libzmq/releases/download/v$($(package)_version)/
 $(package)_file_name=$(package)-$($(package)_version).tar.gz
-$(package)_sha256_hash=e99f44fde25c2e4cb84ce440f87ca7d3fe3271c2b8cfbc67d55e4de25e6fe378
+$(package)_sha256_hash=6653d62b9265f5a6ce71d0416cfb8a92d683e72093a7013a8f50b2a0f24e64b9
 
 define $(package)_set_vars
-  $(package)_config_opts=--without-documentation --disable-shared --without-libsodium
+  $(package)_config_opts=--without-documentation --disable-shared --without-libsodium --prefix=$(host_prefix)
   $(package)_config_opts_linux=--with-pic
-  $(package)_cxxflags=-std=c++11
 endef
 
 define $(package)_config_cmds
-  $($(package)_autoconf)
+  ./configure $($(package)_config_opts) || exit 1
 endef
 
 define $(package)_build_cmds
-  $(MAKE) libzmq.la
+  $(MAKE) || exit 1
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) DESTDIR=$($(package)_staging_dir) install-libLTLIBRARIES install-includeHEADERS install-pkgconfigDATA
+  $(MAKE) DESTDIR=$($(package)_staging_dir) install || exit 1
 endef
 
 define $(package)_postprocess_cmds
-  rm -rf bin share
+  rm -rf $($(package)_staging_dir)$(host_prefix)/{bin,share} || exit 1
 endef
