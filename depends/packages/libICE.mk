@@ -1,13 +1,13 @@
-package=libICE
-$(package)_version=1.0.9
-$(package)_download_path=http://xorg.freedesktop.org/releases/individual/lib/
-$(package)_file_name=$(package)-$($(package)_version).tar.bz2
-$(package)_sha256_hash=8f7032f2c1c64352b5423f6b48a8ebdc339cc63064af34d66a6c9aa79759e202
-$(package)_dependencies=xtrans xproto
+package=freetype
+$(package)_version:=2.13.2
+$(package)_download_path:=https://download.savannah.gnu.org/releases/$(package)
+$(package)_file_name:=$(package)-$($(package)_version).tar.xz
+$(package)_sha256_hash:=12991c4e55c506dd7f9b765933e62fd2be2e06d7549550f66c1361b24e4fd832
+$(package)_autoconf:=configure
 
 define $(package)_set_vars
-  $(package)_config_opts=--disable-static --disable-docs --disable-specs --without-xsltproc
-  $(package)_config_opts_linux=--with-pic
+  $(package)_config_opts:=--without-zlib --without-png --disable-shared
+  $(package)_config_opts_linux:=--with-pic
 endef
 
 define $(package)_config_cmds
@@ -15,9 +15,9 @@ define $(package)_config_cmds
 endef
 
 define $(package)_build_cmds
-  $(MAKE)
+  $(MAKE) || exit 1
 endef
 
 define $(package)_stage_cmds
-  $(MAKE) DESTDIR=$($(package)_staging_dir) install
+  $(MAKE) DESTDIR=$($(package)_staging_dir) install || exit 1
 endef
